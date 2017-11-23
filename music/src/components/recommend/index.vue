@@ -19,7 +19,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {getRecommend} from 'api/recommend.js';
+    import {getRecommend,getDiscList} from 'api/recommend.js';
     import {ERR_OK} from 'api/config.js';
     import Slider from 'base/slider/index.vue';
     export default{
@@ -30,6 +30,7 @@
         },
         created(){
             this._getRecommend();
+            this._getDiscList();
         },
         methods: {
             _getRecommend(){
@@ -39,7 +40,15 @@
                         this.recommends = res.data.slider;
                     }
                 });
-            }
+            },
+            _getDiscList() {
+                getDiscList().then((res) => {
+                    console.log(res);
+                    if (res.code === ERR_OK) {
+                        this.discList = res.data.list;
+                    }
+                });
+            },
         },
         components: {
             'v-slider': Slider

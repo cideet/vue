@@ -2,12 +2,11 @@
  * Created by sf on 2017/11/24.
  */
 
-export const commonParam = {
+export const commonParams = {
     inCharset: 'utf-8',
     outCharset: 'utf-8',
     notice: 0,
-    format: 'jsonp',
-    g_tk: 5381
+    format: 'json'
 };
 
 export const options = {
