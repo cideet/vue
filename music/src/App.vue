@@ -1,10 +1,16 @@
 <template>
-    <div id="App">123</div>
+    <div id="App">
+        <m-header></m-header>
+    </div>
 </template>
 
 <script type="text/ecmascript-6">
+    import MHeader from 'components/m-header/index.vue';
     export default{
-        name: 'app'
+        components: {
+            MHeader: MHeader
+        }
+
     }
 </script>
 
