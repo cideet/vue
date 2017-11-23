@@ -1,14 +1,20 @@
 <template>
     <div id="App">
-        <m-header></m-header>
+        <v-m-header></v-m-header>
+        <v-tab></v-tab>
+        <keep-alive>
+            <router-view></router-view>
+        </keep-alive>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
     import MHeader from 'components/m-header/index.vue';
+    import Tab from 'components/tab/index.vue';
     export default{
         components: {
-            MHeader: MHeader
+            'v-m-header': MHeader,
+            'v-tab': Tab
         }
 
     }
@@ -16,7 +22,6 @@
 
 <style lang="less" rel="stylesheet/less">
     body {
-        background: red;
         display: flex;
     }
 </style>
