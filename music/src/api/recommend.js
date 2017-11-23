@@ -5,6 +5,7 @@
 import jsonp from '../common/js/jsonp.js';
 import {commonParam, options} from './config.js';
 
+// 抓取QQ音乐轮播图
 export function getRecommend() {
     const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg';
     const data = Object.assign({}, commonParam, {
