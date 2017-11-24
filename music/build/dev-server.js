@@ -23,9 +23,9 @@ var proxyTable = config.dev.proxyTable
 
 var app = express();
 
-var apiRouter = express.Router();
+var apiRoutes = express.Router();
 
-apiRouter.get('/getDiscList', function (req, res) {
+apiRoutes.get('/getDiscList', function (req, res) {
     const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg';
 
     axios.get(url, {
@@ -41,7 +41,7 @@ apiRouter.get('/getDiscList', function (req, res) {
     });
 });
 
-app.use('/api', apiRouter);
+app.use('/api', apiRoutes);
 
 var compiler = webpack(webpackConfig)
 
