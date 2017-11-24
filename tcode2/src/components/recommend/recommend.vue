@@ -73,6 +73,7 @@
       },
       _getDiscList() {
         getDiscList().then((res) => {
+          console.log(res);
           if (res.code === ERR_OK) {
             this.discList = res.data.list;
           }
