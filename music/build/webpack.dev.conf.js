@@ -33,24 +33,49 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         quiet: true, // necessary for FriendlyErrorsPlugin
         watchOptions: {
             poll: config.dev.poll,
-        }
-    },
-    plugins: [
-        new webpack.DefinePlugin({
-            'process.env': require('../config/dev.env')
-        }),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
-        new webpack.NoEmitOnErrorsPlugin(),
-        // https://github.com/ampedandwired/html-webpack-plugin
-        new HtmlWebpackPlugin({
-            filename: 'index.html',
-            template: 'index.html',
-            inject: true,
-            favicon: './favicon.ico'
-        }),
-    ]
-})
+        },
+        before(app) {
+            var appData = require("../data.json");      // 读入数据
+            var seller = appData.seller;
+            var goods = appData.goods;
+            var ratings = appData.ratings;
+            app.get("/api/seller", function (req, res) {
+                res.json({
+                    errno: 0,
+                    data: seller
+                });
+            });
+
+            app.get("/api/goods", function (req, res) {
+                res.json({
+                    errno: 0,
+                    data: goods
+                });
+            });
+
+            app.get("/api/ratings", function (req, res) {
+                res.json({
+                    errno: 0,
+                    data: ratings
+                });
+            });
+        },
+        plugins: [
+            new webpack.DefinePlugin({
+                'process.env': require('../config/dev.env')
+            }),
+            new webpack.HotModuleReplacementPlugin(),
+            new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
+            new webpack.NoEmitOnErrorsPlugin(),
+            // https://github.com/ampedandwired/html-webpack-plugin
+            new HtmlWebpackPlugin({
+                filename: 'index.html',
+                template: 'index.html',
+                inject: true,
+                favicon: './favicon.ico'
+            }),
+        ]
+    })
 
 module.exports = new Promise((resolve, reject) => {
     portfinder.basePort = process.env.PORT || config.dev.port
