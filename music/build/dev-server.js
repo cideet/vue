@@ -22,27 +22,6 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express();
-
-var apiRoutes = express.Router();
-
-apiRoutes.get('/getDiscList', function (req, res) {
-    const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg';
-
-    axios.get(url, {
-        headers: {
-            referer: 'https://y.qq.com/portal/playlist.html',
-            host: 'c.y.qq.com'
-        },
-        params: req.query
-    }).then((response) => {
-        res.json(response.data);
-    }).catch((e) => {
-        console.log(e);
-    });
-});
-
-app.use('/api', apiRoutes);
-
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
