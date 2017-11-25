@@ -1,15 +1,23 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
-import App from './App'
-import router from './router'
+/**
+ * Created by sf on 2017/11/23.
+ */
+import 'babel-polyfill';
+import fastclick from 'fastclick';
+import Vue from 'vue';
+import router from './router/index.js';
 
-Vue.config.productionTip = false
+import App from './App.vue';
 
-/* eslint-disable no-new */
+import '../src/common/less/index.less';
+
+fastclick.attach(document.body);
+
 new Vue({
-  el: '#app',
-  router,
-  template: '<App/>',
-  components: { App }
-})
+    el: '#app',
+    router: router,
+    render: (function (h) {
+        return h(App)
+    })
+    // render:h=>h(App)
+
+});

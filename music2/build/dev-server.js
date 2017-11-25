@@ -23,18 +23,6 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express()
-
-var appData = require("../data.json");      // 读入数据
-var seller = appData.seller;
-
-var apiRoutes = express.Router();
-
-apiRoutes.get("/seller", function (req, res) {
-  res.json({name:'aaa',pwd:'123'});
-});
-
-app.use('/api', apiRoutes);
-
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
