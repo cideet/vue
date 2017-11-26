@@ -67,5 +67,34 @@ module.exports = {
                 }
             }
         ]
-    }
+    },
+    devServer: {
+        before(app) {
+            var appData = require("../data.json");      // 读入数据
+            var seller = appData.seller;
+            app.get("/api/getDiscList", function (req, res) {
+                res.json({
+                    errno: 0,
+                    data: seller
+                });
+            });
+        },
+        clientLogLevel: 'warning',
+        historyApiFallback: true,
+        hot: true,
+        compress: true,
+        host: process.env.HOST || config.dev.host,
+        port: process.env.PORT || config.dev.port,
+        open: config.dev.autoOpenBrowser,
+        overlay: config.dev.errorOverlay ? {
+            warnings: false,
+            errors: true,
+        } : false,
+        publicPath: config.dev.assetsPublicPath,
+        proxy: config.dev.proxyTable,
+        quiet: true, // necessary for FriendlyErrorsPlugin
+        watchOptions: {
+            poll: config.dev.poll,
+        }
+    },
 }
