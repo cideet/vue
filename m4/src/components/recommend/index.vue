@@ -12,20 +12,31 @@
             </div>
             <div class="recommend-list">
                 <h1 class="list-title">热门歌单推荐</h1>
-                <ul></ul>
+                <ul>
+                    <li class="item" v-for="item in discList">
+                        <div class="icon">
+                            <img width="60" height="60" :src="item.imgurl"/>
+                        </div>
+                        <div class="text">
+                            <h2 class="name" v-html="item.creator.name"></h2>
+                            <p class="desc" v-html="item.dissname"></p>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
-    import {getRecommend,getDiscList} from 'api/recommend.js';
+    import {getRecommend, getDiscList} from 'api/recommend.js';
     import {ERR_OK} from 'api/config.js';
     import Slider from 'base/slider/index.vue';
     export default{
         data(){
             return {
-                recommends: []
+                recommends: [],
+                discList: []
             };
         },
         created(){

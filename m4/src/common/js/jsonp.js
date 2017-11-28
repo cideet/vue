@@ -17,7 +17,11 @@ export default function jsonp(url, data, option) {
     })
 }
 
-
+/**
+ * 对象转成URL的参数
+ * @param data
+ * @returns {string}
+ */
 function param(data) {
     let url = '';
     for (var k in data) {

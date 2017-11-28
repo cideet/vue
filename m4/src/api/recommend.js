@@ -7,7 +7,10 @@ import axios from 'axios';
 import jsonp from '../common/js/jsonp.js';
 import {commonParams, options} from './config.js';
 
-// 抓取QQ音乐轮播图
+/**
+ * 抓取QQ音乐轮播图
+ * jsonp请求
+ */
 export function getRecommend() {
     const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg';
     const data = Object.assign({}, commonParams, {
@@ -18,6 +21,10 @@ export function getRecommend() {
     return jsonp(url, data, options);
 }
 
+/**
+ * 获取热门歌单推荐
+ * ajax请求
+ */
 export function getDiscList() {
     const url = '/api/getDiscList';
     const data = Object.assign({}, commonParams, {
@@ -31,9 +38,7 @@ export function getDiscList() {
         rnd: Math.random(),
         format: 'json'
     });
-    return axios.get(url, {
-        params: data
-    }).then((res) => {
+    return axios.get(url, {params: data}).then((res) => {
         return Promise.resolve(res.data)
     })
 }
