@@ -1,30 +1,33 @@
 <template>
     <div class="recommend">
-        <div class="recommend-content">
+        <v-scroll ref="scroll" class="recommend-content" :data="discList">
             <div v-if="recommends.length" class="slider-wrapper">
                 <v-slider>
                     <div v-for="item in recommends">
                         <a :href="item.linkUrl">
-                            <img :src="item.picUrl"/>
+                            <img @load="loadImage" :src="item.picUrl"/>
                         </a>
                     </div>
                 </v-slider>
             </div>
-            <div class="recommend-list">
-                <h1 class="list-title">热门歌单推荐</h1>
-                <ul>
-                    <li class="item" v-for="item in discList">
-                        <div class="icon">
-                            <img width="60" height="60" :src="item.imgurl"/>
-                        </div>
-                        <div class="text">
-                            <h2 class="name" v-html="item.creator.name"></h2>
-                            <p class="desc" v-html="item.dissname"></p>
-                        </div>
-                    </li>
-                </ul>
+            <div>
+                <div class="recommend-list">
+                    <h1 class="list-title">热门歌单推荐</h1>
+                    <ul>
+                        <li class="item" v-for="item in discList">
+                            <div class="icon">
+                                <img width="60" height="60" :src="item.imgurl"/>
+                            </div>
+                            <div class="text">
+                                <h2 class="name" v-html="item.creator.name"></h2>
+                                <p class="desc" v-html="item.dissname"></p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
+
+        </v-scroll>
     </div>
 </template>
 
@@ -32,6 +35,7 @@
     import {getRecommend, getDiscList} from 'api/recommend.js';
     import {ERR_OK} from 'api/config.js';
     import Slider from 'base/slider/index.vue';
+    import Scroll from 'base/scroll/index.vue';
     export default{
         data(){
             return {
@@ -60,9 +64,18 @@
                     }
                 });
             },
+            loadImage(){
+                // 单张图片撑开即OK，
+                // 设置标志位，确保逻辑执行
+                if (!this.checkLoaded) {
+                    this.checkloaded = true;
+                    this.$refs.scroll.refresh();
+                }
+            }
         },
         components: {
-            'v-slider': Slider
+            'v-slider': Slider,
+            'v-scroll': Scroll
         }
     }
 </script>
