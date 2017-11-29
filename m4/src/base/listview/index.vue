@@ -26,14 +26,22 @@
                 </li>
             </ul>
         </div>
+        <div class="list-fixed" v-show="fixedTitle" ref="fixed">
+            <h1 class="fixed-title">{{fixedTitle}}</h1>
+        </div>
+        <div class="loading-container" v-show="!data.length">
+            <v-loading></v-loading>
+        </div>
     </v-scroll>
 </template>
 
 <script type="text/ecmascript-6">
     import Scroll from 'base/scroll/index.vue';
     import {attr} from 'common/js/dom.js';
+    import Loading from 'base/loading/index.vue';
 
     const ANCHOR_HEIGHT = 18;  //右侧导航每个LI的高度
+    const TITLE_HEIGHT = 30;
 
     export default {
         created(){
@@ -44,7 +52,8 @@
         data(){
             return {
                 scrollY: -1,
-                currentIndex: 0
+                currentIndex: 0,
+                diff: -1
             };
         },
         props: {
@@ -58,6 +67,12 @@
                 return this.data.map((group)=> {
                     return group.title.substr(0, 1);
                 });
+            },
+            fixedTitle(){
+                if (this.scrollY > 0) {
+                    return '';
+                }
+                return this.data[this.currentIndex] ? this.data[this.currentIndex].title : '';
             }
         },
         methods: {
@@ -88,7 +103,7 @@
                     index = this.listHeight.length - 2;
                 }
                 this.scrollY = -this.listHeight[index];
-                this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0);
+                this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 10);
             },
             _calculateHeight(){  //当data发生变化的时候，我们需要重新计算高度
                 this.listHeight = [];
@@ -120,15 +135,23 @@
                     let height2 = listHeight[i + 1];
                     if (!height2 || (-newY >= height1 && -newY < height2)) {
                         this.currentIndex = i;
+                        this.diff = height2 + newY;
                         return;
                     }
                 }
                 // 当滚动到底部，且-newY大于最后一个元素的上限
                 this.currentIndex = listHeight.length - 2;
+            },
+            diff(newVal){
+                let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0;
+                if (this.fixedTop == fixedTop) return;
+                this.fixedTop = fixedTop;
+                this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`;
             }
         },
         components: {
-            'v-scroll': Scroll
+            'v-scroll': Scroll,
+            'v-loading': Loading
         }
     }
 </script>
