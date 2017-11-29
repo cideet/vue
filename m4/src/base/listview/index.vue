@@ -81,7 +81,14 @@
                 this.scrollY = pos.y;
             },
             _scrollTo(index){
-                this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 200);
+                if (!index && index !== 0) return;
+                if (index < 0) {
+                    index = 0;
+                } else if (index > this.listHeight.length - 2) {
+                    index = this.listHeight.length - 2;
+                }
+                this.scrollY = -this.listHeight[index];
+                this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0);
             },
             _calculateHeight(){  //当data发生变化的时候，我们需要重新计算高度
                 this.listHeight = [];
