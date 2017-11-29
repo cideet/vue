@@ -1,16 +1,16 @@
 <template>
     <div class="recommend">
         <v-scroll ref="scroll" class="recommend-content" :data="discList">
-            <div v-if="recommends.length" class="slider-wrapper">
-                <v-slider>
-                    <div v-for="item in recommends">
-                        <a :href="item.linkUrl">
-                            <img @load="loadImage" :src="item.picUrl" class="needsclick"/>
-                        </a>
-                    </div>
-                </v-slider>
-            </div>
             <div>
+                <div v-if="recommends.length" class="slider-wrapper">
+                    <v-slider>
+                        <div v-for="item in recommends">
+                            <a :href="item.linkUrl">
+                                <img @load="loadImage" :src="item.picUrl" class="needsclick"/>
+                            </a>
+                        </div>
+                    </v-slider>
+                </div>
                 <div class="recommend-list">
                     <h1 class="list-title">热门歌单推荐</h1>
                     <ul>
@@ -26,7 +26,9 @@
                     </ul>
                 </div>
             </div>
-
+            <div class="loading-container" v-show="!discList.length">
+                <v-loading></v-loading>
+            </div>
         </v-scroll>
     </div>
 </template>
@@ -36,6 +38,7 @@
     import {ERR_OK} from 'api/config.js';
     import Slider from 'base/slider/index.vue';
     import Scroll from 'base/scroll/index.vue';
+    import Loading from 'base/loading/index.vue';
     export default{
         data(){
             return {
@@ -75,7 +78,8 @@
         },
         components: {
             'v-slider': Slider,
-            'v-scroll': Scroll
+            'v-scroll': Scroll,
+            'v-loading': Loading
         }
     }
 </script>
