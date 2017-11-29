@@ -1,10 +1,11 @@
 <template>
     <div class="singer">
-
+        <v-listview :data="singers"></v-listview>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
+    import ListView from 'base/listview/index.vue';
     import {getSingerList} from 'api/singer.js';
     import {ERR_OK} from 'api/config.js';
 
@@ -26,7 +27,8 @@
                     //console.log(res);
                     if (res.code == ERR_OK) {
                         this.singers = res.data.list;
-                        console.log(this._normalizeSinger(this.singers));
+                        //console.log(this._normalizeSinger(this.singers));
+                        this.singers = this._normalizeSinger(this.singers);
                     }
                 });
             },
@@ -77,6 +79,9 @@
             }
 
 
+        },
+        components: {
+            'v-listview': ListView
         }
     }
 </script>

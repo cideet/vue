@@ -21,7 +21,5 @@
 </script>
 
 <style lang="less" rel="stylesheet/less">
-    body {
-        display: flex;
-    }
+    @import url("common/less/variable.less");
 </style>
