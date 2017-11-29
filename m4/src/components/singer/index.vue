@@ -1,6 +1,7 @@
 <template>
-    <div class="c">
-        歌手页面
+    <div class="singer">
+        <div>singer</div>
+        <router-view></router-view>
     </div>
 </template>
 
