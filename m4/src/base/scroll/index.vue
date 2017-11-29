@@ -11,7 +11,7 @@
         props: {
             probeType: {type: Number, default: 1},
             click: {type: Boolean, default: true},
-            listenScroll: {type: Boolean, default: false},
+            listenScroll: {type: Boolean, default: false},  //要不要监听滚动事件
             data: {type: Array, default: null},
             pullup: {type: Boolean, default: false},
             beforeScroll: {type: Boolean, default: false},
