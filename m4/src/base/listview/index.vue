@@ -1,7 +1,7 @@
 <template>
-    <v-scroll class="listview" :data="data">
+    <v-scroll class="listview" :data="data" ref="listview">
         <ul>
-            <li class="list-group" v-for="group in data">
+            <li class="list-group" v-for="group in data" ref="listGroup">
                 <h2 class="list-group-title">{{group.title}}</h2>
                 <ul>
                     <li class="list-group-item" v-for="item in group.items">
@@ -11,16 +11,58 @@
                 </ul>
             </li>
         </ul>
+        <div class="list-shortcut" @touchstart="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove">
+            <ul>
+                <li v-for="(item,index) in shortcutList" class="item" :data-index="index">
+                    {{item}}
+                </li>
+            </ul>
+        </div>
     </v-scroll>
 </template>
 
 <script type="text/ecmascript-6">
     import Scroll from 'base/scroll/index.vue';
+    import {attr} from 'common/js/dom.js';
+
+    const ANCHOR_HEIGHT = 18;  //右侧导航每个LI的高度
+
     export default {
+        created(){
+            this.touch = {}
+        },
         props: {
             data: {
                 type: Array,
                 default: []
+            }
+        },
+        computed: {
+            shortcutList(){
+                return this.data.map((group)=> {
+                    return group.title.substr(0, 1);
+                });
+            }
+        },
+        methods: {
+            onShortcutTouchStart(e){
+                let anchorIndex = attr(e.target, 'index');
+                this.touch.y1 = e.touches[0].pageY; //第一个手指点击的位置
+                this.touch.anchorIndex = anchorIndex;
+                this._scrollTo(anchorIndex);
+            },
+            onShortcutTouchMove(e){
+                this.touch.y2 = e.touches[0].pageY;
+                let delta = this.touch.y2 - this.touch.y1;
+                // console.log(delta);  //每次滑动的高度
+                // delta = Math.floor(delta / ANCHOR_HEIGHT);
+                delta = delta / ANCHOR_HEIGHT | 0;
+                // console.log(delta);  //每次滑动了几个li
+                let anchorIndex = parseInt(this.touch.anchorIndex) + delta;
+                this._scrollTo(anchorIndex);
+            },
+            _scrollTo(index){
+                this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 200);
             }
         },
         components: {
