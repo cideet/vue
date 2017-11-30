@@ -7,7 +7,7 @@ import Vuex from 'vuex';
 
 import * as actions from './actions.js';
 import * as getters from './getters.js';
-import * as state from './state.js';
+import state from './state.js';
 import mutations from './mutations.js';
 import createLogger from 'vuex/dist/logger'; //修改日志
 

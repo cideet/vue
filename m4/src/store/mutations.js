@@ -2,7 +2,7 @@
  * Created by sf on 2017/12/1.
  */
 
-import * as types from './mutation-types';
+import * as types from './mutation-types.js';
 
 const mutations = {
     /**
