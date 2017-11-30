@@ -9,6 +9,8 @@
 
 <script type="text/ecmascript-6">
     import {mapGetters} from 'vuex';
+    import {getSingerDetail} from 'api/singer.js';
+    import {ERR_OK} from 'api/config.js';
 
     export default {
         computed: {
@@ -17,8 +19,22 @@
             ])
         },
         created() {
-            console.log('----');
             console.log(this.singer);
+            this._getDetail();
+        },
+        methods: {
+            _getDetail(){
+                if (!this.singer.id) {  //比如刷新页面时，便没有Id了
+                    this.$router.push('/singer');
+                    return;
+                }
+                getSingerDetail(this.singer.id).then((res)=> {
+                    if (res.code == ERR_OK) {
+                        console.log('该歌手所有的歌曲');
+                        console.log(res.data.list);
+                    }
+                })
+            }
         }
     };
 </script>
