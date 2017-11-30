@@ -11,8 +11,14 @@
     import {mapGetters} from 'vuex';
     import {getSingerDetail} from 'api/singer.js';
     import {ERR_OK} from 'api/config.js';
+    import {createSong} from 'common/js/song.js';
 
     export default {
+        data(){
+            return {
+                songs: []
+            }
+        },
         computed: {
             ...mapGetters([
                 'singer'
@@ -30,10 +36,22 @@
                 }
                 getSingerDetail(this.singer.id).then((res)=> {
                     if (res.code == ERR_OK) {
-                        console.log('该歌手所有的歌曲');
-                        console.log(res.data.list);
+                        // console.log('该歌手所有的歌曲');
+                        // console.log(res.data.list);
+                        this.songs = this._normalizeSongs(res.data.list);
+                        console.log(this.songs);
                     }
                 })
+            },
+            _normalizeSongs(list) {
+                let ret = [];
+                list.forEach((item) => {
+                    let musicData = item.musicData;
+                    if (musicData.songid && musicData.albummid) {
+                        ret.push(createSong(musicData));
+                    }
+                });
+                return ret;
             }
         }
     };
