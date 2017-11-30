@@ -20,6 +20,15 @@ import ListView from 'base/listview/index.vue'; <br>
 vue动画 <br>
 具体查看 https://cn.vuejs.org/v2/guide/transitions.html <br>
 
+vuex官方文档 https://vuex.vuejs.org/zh-cn/intro.html <br>
+index.js 入口 <br>
+state.js 状态 <br>
+mutations.js <br>
+mutation-types.js mutation的相关名字，存储为相关的常量 <br>
+actions.js 封装mutation操作的方法 <br>
+getters.js 获取state <br>
+
+
 
 
 
