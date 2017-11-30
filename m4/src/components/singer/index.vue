@@ -1,6 +1,7 @@
 <template>
     <div class="singer">
-        <v-listview :data="singers"></v-listview>
+        <v-listview @select="selectSinger" :data="singers"></v-listview>
+        <router-view></router-view>
     </div>
 </template>
 
@@ -8,6 +9,8 @@
     import ListView from 'base/listview/index.vue';
     import {getSingerList} from 'api/singer.js';
     import {ERR_OK} from 'api/config.js';
+
+
 
     const HOT_NAME = '热门';
     const HOT_SINGER_LEN = 10;
@@ -22,6 +25,11 @@
             this._getSingerList();
         },
         methods: {
+            selectSinger(singer){
+                this.$router.push({
+                    path: '/singer/' + singer.id
+                })
+            },
             _getSingerList(){
                 getSingerList().then((res)=> {
                     //console.log(res);
