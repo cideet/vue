@@ -23,10 +23,10 @@ vue动画 <br>
 vuex官方文档 https://vuex.vuejs.org/zh-cn/intro.html <br>
 index.js 入口 <br>
 state.js 状态 <br>
-mutations.js <br>
+mutations.js 定义修改的操作 <br>
 mutation-types.js mutation的相关名字，存储为相关的常量 <br>
 actions.js 封装mutation操作的方法 <br>
-getters.js 获取state <br>
+getters.js 获取state给组件 <br>
 
 
 
