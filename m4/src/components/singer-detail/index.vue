@@ -1,5 +1,7 @@
 <template>
-    <div class="singer-detail">singer-detail</div>
+    <transition name="slide">
+        <div class="singer-detail">singer-detail</div>
+    </transition>
     <!--<transition name="slide">-->
     <!--<v-music-list :songs="songs" :title="title" :bg-image="bgImage"></v-music-list>-->
     <!--</transition>-->
