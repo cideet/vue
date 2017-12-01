@@ -57,17 +57,25 @@
             scrollY(newY){
                 let translateY = Math.max(this.minTranslateY, newY);
                 let zIndex = 0;
+                let scale = 1;  //头像的放大比例
+                const percent = Math.abs(newY / this.imageHeight);
                 this.$refs.layer.style['transform'] = `translate3d(0,${translateY}px,0)`;
-                this.$refs.layer.style['webkit-transform'] = `translate3d(0,${translateY}px,0)`;
+                this.$refs.layer.style['webkitTransform'] = `translate3d(0,${translateY}px,0)`;
                 if (newY < this.minTranslateY) {
                     zIndex = 10;
                     this.$refs.bgImage.style.paddingTop = 0;
                     this.$refs.bgImage.style.height = RESERVED_HEIGHT + 'px';
-                }else{
+                } else {
                     this.$refs.bgImage.style.paddingTop = '70%';
                     this.$refs.bgImage.style.height = 0;
                 }
+                if (newY > 0) {
+                    scale = 1 + percent;
+                    zIndex = 10;
+                }
                 this.$refs.bgImage.style.zIndex = zIndex;
+                this.$refs.bgImage.style['transform'] = `scale(${scale})`;
+                this.$refs.bgImage.style['webkitTransform'] = `scale(${scale})`;
             }
         },
         components: {
