@@ -25,8 +25,13 @@ index.js 入口 <br>
 state.js 状态 <br>
 mutations.js 定义修改的操作 <br>
 mutation-types.js mutation的相关名字，存储为相关的常量 <br>
-actions.js 封装mutation操作的方法 <br>
 getters.js 获取state给组件 <br>
+actions.js 封装mutation操作的方法 <br>
+给vuex定义数据的步骤： <br>
+1、定义state，项目会用到的原始数据 <br>
+2、对数据映射，写在getters，可以是函数 <br>
+3、修改state，逻辑的函数名写在mutations.js（包括mutation-types.js） <br>
+4、actions.js，呆会再补充 <br>
 
 
 
