@@ -24,8 +24,12 @@
 <script type="text/ecmascript-6">
     import Scroll from 'base/scroll/index.vue';
     import Songlist from 'base/song-list/index.vue';
+    import {prefixStyle} from 'common/js/dom.js';
 
     const RESERVED_HEIGHT = 40;
+    const transform = prefixStyle('transform');
+    const backdrop = prefixStyle('backgrop-filter');
+
     export default {
         props: ['bgImage', 'songs', 'title'],
         computed: {
@@ -60,8 +64,9 @@
                 let scale = 1;  //头像的放大比例
                 let blur = 0;  //头像模糊
                 const percent = Math.abs(newY / this.imageHeight);
-                this.$refs.layer.style['transform'] = `translate3d(0,${translateY}px,0)`;
-                this.$refs.layer.style['webkitTransform'] = `translate3d(0,${translateY}px,0)`;
+                this.$refs.layer.style[transform] = `translate3d(0,${translateY}px,0)`;
+                //this.$refs.layer.style['transform'] = `translate3d(0,${translateY}px,0)`;
+                //this.$refs.layer.style['webkitTransform'] = `translate3d(0,${translateY}px,0)`;
                 if (newY < this.minTranslateY) {
                     zIndex = 10;
                     this.$refs.bgImage.style.paddingTop = 0;
@@ -76,11 +81,13 @@
                 } else {
                     blur = Math.min(20 * percent, 20);
                 }
-                this.$refs.filter.style['backdropFilter'] = `blur(${blur}px)`;
-                this.$refs.filter.style['webkitBackdropFilter'] = `blur(${blur}px)`;
+                this.$refs.filter.style[backdrop] = `blur(${blur}px)`;
+                //this.$refs.filter.style['backdropFilter'] = `blur(${blur}px)`;
+                //this.$refs.filter.style['webkitBackdropFilter'] = `blur(${blur}px)`;
                 this.$refs.bgImage.style.zIndex = zIndex;
-                this.$refs.bgImage.style['transform'] = `scale(${scale})`;
-                this.$refs.bgImage.style['webkitTransform'] = `scale(${scale})`;
+                this.$refs.bgImage.style[transform] = `scale(${scale})`;
+                //this.$refs.bgImage.style['transform'] = `scale(${scale})`;
+                //this.$refs.bgImage.style['webkitTransform'] = `scale(${scale})`;
             }
         },
         components: {
