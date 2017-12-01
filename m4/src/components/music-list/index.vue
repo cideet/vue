@@ -4,30 +4,83 @@
             <i class="icon-back"></i>
         </div>
         <h1 class="title" v-html="title"></h1>
-        <div class="bg-image" :style="bgStyle">
-            <div class="filter">filter</div>
+        <div class="bg-image" :style="bgStyle" ref="bgImage">
+            <div class="filter"></div>
         </div>
+        <div class="bg-layer" ref="layer"></div>
+        <v-scroll :probe-type="probeType"
+                  :listen-scroll="listenScroll"
+                  :data="songs"
+                  @scroll="scroll"
+                  class="list"
+                  ref="list">
+            <div class="song-list-wrapper">
+                <v-songlist :songs="songs"></v-songlist>
+            </div>
+        </v-scroll>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
+    import Scroll from 'base/scroll/index.vue';
+    import Songlist from 'base/song-list/index.vue';
+
+    const RESERVED_HEIGHT = 40;
     export default {
-        props: {
-            bgImage: {type: String, default: ''},
-            songs: {type: Array, default: []},
-            title: {type: String, default: ''}
-        },
+        props: ['bgImage', 'songs', 'title'],
         computed: {
             bgStyle() {
                 return `background-image: url(${this.bgImage})`;
             }
+        },
+        data(){
+            return {
+                scrollY: 0
+            }
+        },
+        created(){
+            this.probeType = 3;
+            this.listenScroll = true;
+        },
+        mounted(){
+            this.imageHeight = this.$refs.bgImage.clientHeight;
+            this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT;
+            this.$refs.list.$el.style.top = this.imageHeight + 'px';
+        },
+        methods: {
+            scroll(pos){
+                this.scrollY = pos.y;
+                console.log(this.scrollY);
+            }
+        },
+        watch: {
+            scrollY(newY){
+                let translateY = Math.max(this.minTranslateY, newY);
+                let zIndex = 0;
+                this.$refs.layer.style['transform'] = `translate3d(0,${translateY}px,0)`;
+                this.$refs.layer.style['webkit-transform'] = `translate3d(0,${translateY}px,0)`;
+                if (newY < this.minTranslateY) {
+                    zIndex = 10;
+                    this.$refs.bgImage.style.paddingTop = 0;
+                    this.$refs.bgImage.style.height = RESERVED_HEIGHT + 'px';
+                }else{
+                    this.$refs.bgImage.style.paddingTop = '70%';
+                    this.$refs.bgImage.style.height = 0;
+                }
+                this.$refs.bgImage.style.zIndex = zIndex;
+            }
+        },
+        components: {
+            'v-scroll': Scroll,
+            'v-songlist': Songlist
         }
     }
 </script>
 
 <style lang="less" rel="stylesheet/less">
-    @import url('../../common/less/variable');
-    @import url('../../common/less/mixin');
+    @import url('../../common/less/variable.less');
+    @import url('../../common/less/mixin.less');
+
     .music-list {
         position: fixed;
         z-index: 100;
@@ -108,6 +161,7 @@
             position: relative;
             height: 100%;
             background: @color-background;
+            //background: red;
         }
         .list {
             /*overflow: hidden;*/

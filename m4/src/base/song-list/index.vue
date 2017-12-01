@@ -1,11 +1,25 @@
 <template>
     <div class="song-list">
-        <ul></ul>
+        <ul>
+            <li v-for="song in songs" class="item">
+                <div class="content">
+                    <h2 class="name">{{song.name}}</h2>
+                    <p class="desc">{{getDesc(song)}}</p>
+                </div>
+            </li>
+        </ul>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
-
+    export default {
+        props: ['songs'],
+        methods: {
+            getDesc(song){
+                return `${song.singer} • ${song.album}`;
+            }
+        }
+    }
 </script>
 
 <style lang="less" rel="stylesheet/less">

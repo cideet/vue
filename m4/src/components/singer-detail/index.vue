@@ -2,7 +2,7 @@
     <transition name="slide">
         <v-musiclist
                 :title="title"
-                :bgImage="bgImage"
+                :bg-image="bgImage"
                 :songs="songs"></v-musiclist>
     </transition>
     <!--<transition name="slide">-->
