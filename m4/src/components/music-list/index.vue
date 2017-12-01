@@ -1,10 +1,16 @@
 <template>
     <div class="music-list">
-        <div class="back">
+        <div class="back" @click="back">
             <i class="icon-back"></i>
         </div>
         <h1 class="title" v-html="title"></h1>
         <div class="bg-image" :style="bgStyle" ref="bgImage">
+            <div class="play-wrapper">
+                <div class="play" v-show="songs.length>0" ref="playBtn">
+                    <i class="icon-play"></i>
+                    <span class="text">随机播放全部</span>
+                </div>
+            </div>
             <div class="filter" ref="filter"></div>
         </div>
         <div class="bg-layer" ref="layer"></div>
@@ -17,6 +23,9 @@
             <div class="song-list-wrapper">
                 <v-songlist :songs="songs"></v-songlist>
             </div>
+            <div class="loading-container" v-show="!songs.length">
+                <v-loading></v-loading>
+            </div>
         </v-scroll>
     </div>
 </template>
@@ -24,6 +33,7 @@
 <script type="text/ecmascript-6">
     import Scroll from 'base/scroll/index.vue';
     import Songlist from 'base/song-list/index.vue';
+    import Loading from 'base/loading/index.vue';
     import {prefixStyle} from 'common/js/dom.js';
 
     const RESERVED_HEIGHT = 40;
@@ -54,7 +64,10 @@
         methods: {
             scroll(pos){
                 this.scrollY = pos.y;
-                console.log(this.scrollY);
+                // console.log(this.scrollY);
+            },
+            back(){
+                this.$router.back();
             }
         },
         watch: {
@@ -71,9 +84,11 @@
                     zIndex = 10;
                     this.$refs.bgImage.style.paddingTop = 0;
                     this.$refs.bgImage.style.height = RESERVED_HEIGHT + 'px';
+                    this.$refs.playBtn.style.display = 'none';
                 } else {
                     this.$refs.bgImage.style.paddingTop = '70%';
                     this.$refs.bgImage.style.height = 0;
+                    this.$refs.playBtn.style.display = '';
                 }
                 if (newY > 0) {
                     scale = 1 + percent;
@@ -82,17 +97,14 @@
                     blur = Math.min(20 * percent, 20);
                 }
                 this.$refs.filter.style[backdrop] = `blur(${blur}px)`;
-                //this.$refs.filter.style['backdropFilter'] = `blur(${blur}px)`;
-                //this.$refs.filter.style['webkitBackdropFilter'] = `blur(${blur}px)`;
                 this.$refs.bgImage.style.zIndex = zIndex;
                 this.$refs.bgImage.style[transform] = `scale(${scale})`;
-                //this.$refs.bgImage.style['transform'] = `scale(${scale})`;
-                //this.$refs.bgImage.style['webkitTransform'] = `scale(${scale})`;
             }
         },
         components: {
             'v-scroll': Scroll,
-            'v-songlist': Songlist
+            'v-songlist': Songlist,
+            'v-loading': Loading
         }
     }
 </script>

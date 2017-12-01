@@ -49,7 +49,7 @@
                         // console.log('该歌手所有的歌曲');
                         // console.log(res.data.list);
                         this.songs = this._normalizeSongs(res.data.list);
-                        console.log(this.songs);
+                        // console.log(this.songs);
                     }
                 })
             },
