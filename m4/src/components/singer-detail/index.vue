@@ -1,6 +1,9 @@
 <template>
     <transition name="slide">
-        <div class="singer-detail">singer-detail</div>
+        <v-musiclist
+                :title="title"
+                :bgImage="bgImage"
+                :songs="songs"></v-musiclist>
     </transition>
     <!--<transition name="slide">-->
     <!--<v-music-list :songs="songs" :title="title" :bg-image="bgImage"></v-music-list>-->
@@ -12,6 +15,7 @@
     import {getSingerDetail} from 'api/singer.js';
     import {ERR_OK} from 'api/config.js';
     import {createSong} from 'common/js/song.js';
+    import Musiclist from 'components/music-list/index.vue';
 
     export default {
         data(){
@@ -20,6 +24,12 @@
             }
         },
         computed: {
+            title(){
+                return this.singer.name
+            },
+            bgImage(){
+                return this.singer.avatar
+            },
             ...mapGetters([
                 'singer'
             ])
@@ -53,6 +63,9 @@
                 });
                 return ret;
             }
+        },
+        components: {
+            'v-musiclist': Musiclist
         }
     };
 </script>
