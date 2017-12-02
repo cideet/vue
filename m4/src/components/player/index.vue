@@ -28,13 +28,13 @@
                 <div class="bottom">
                     <div class="operators">
                         <div class="icon i-left"><i class="icon-sequence"></i></div>
-                        <div class="icon i-left">
+                        <div class="icon i-left" :class="disableClass">
                             <i @click="prev" class="icon-prev"></i>
                         </div>
-                        <div class="icon i-center">
+                        <div class="icon i-center" :class="disableClass">
                             <i @click="togglePlaying" :class="playIcon"></i>
                         </div>
-                        <div class="icon i-right">
+                        <div class="icon i-right" :class="disableClass">
                             <i @click="next" class="icon-next"></i>
                         </div>
                         <div class="icon i-right"><i class="icon icon-not-favorite"></i></div>
@@ -82,6 +82,9 @@
             miniIcon(){
                 return this.playing ? 'icon-pause-mini' : 'icon-play-mini';
             },
+            disableClass(){
+                return this.songReady ? '' : 'disable';
+            },
             ...mapGetters([
                 'fullScreen',
                 'playList',
@@ -122,7 +125,9 @@
             ready(){
                 this.songReady = true;
             },
-            error(){},
+            error(){
+                this.songReady = true;  //比如断网
+            },
             togglePlaying(){
                 this.setPlayingState(!this.playing);
             },
