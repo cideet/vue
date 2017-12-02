@@ -55,7 +55,7 @@
                 <div class="control"><i class="icon-playlist"></i></div>
             </div>
         </transition>
-        <audio ref="audio" :src="currentSong.url"></audio>
+        <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error"></audio>
     </div>
 </template>
 
@@ -67,6 +67,11 @@
     const transform = prefixStyle('transform');
 
     export default {
+        data(){
+            return {
+                songReady: false
+            };
+        },
         computed: {
             cdClass(){
                 return this.playing ? 'play' : 'play pause';
@@ -87,25 +92,37 @@
         },
         methods: {
             next(){
+                if (!this.songReady) {
+                    return;
+                }
                 let index = this.currentIndex + 1;
                 if (index == this.playList.length) {
                     index = 0;
                 }
                 this.setCurrentIndex(index);
-                if(!this.playing){
+                if (!this.playing) {
                     this.togglePlaying();
                 }
+                this.songReady = false;
             },
             prev(){
+                if (!this.songReady) {
+                    return;
+                }
                 let index = this.currentIndex - 1;
                 if (index == -1) {
                     index = this.playList.length;
                 }
                 this.setCurrentIndex(index);
-                if(!this.playing){
+                if (!this.playing) {
                     this.togglePlaying();
                 }
+                this.songReady = false;
             },
+            ready(){
+                this.songReady = true;
+            },
+            error(){},
             togglePlaying(){
                 this.setPlayingState(!this.playing);
             },
