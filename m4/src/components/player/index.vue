@@ -29,7 +29,7 @@
                     <div class="progress-wrapper">
                         <span class="time time-l">{{format(currentTime)}}</span>
                         <div class="progress-bar-wrapper">
-                            <v-progressbar :percent="percent"></v-progressbar>
+                            <v-progressbar :percent="percent" @percentChange="onProgressChange"></v-progressbar>
                         </div>
                         <span class="time time-r">{{format(currentSong.duration)}}</span>
                     </div>
@@ -106,6 +106,14 @@
             ])
         },
         methods: {
+            onProgressChange(percent){
+                //拖动进度条，改变播放时间
+                this.$refs.audio.currentTime = this.currentSong.duration * percent;
+                if (!this.playing) {
+                    this.setPlayingState(true);
+                }
+                this.$refs.audio.play();
+            },
             updateTime(e){
                 //console.log('audio在播放的时候，会派发一个timeupdate的事件');
                 //e.target.currentTime: 获取当前播放到的时间，audio提供
