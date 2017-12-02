@@ -58,7 +58,11 @@
                     <h2 class="name" v-html="currentSong.name"></h2>
                     <p class="desc" v-html="currentSong.singer"></p>
                 </div>
-                <div class="control"><i @click.stop="togglePlaying" :class="miniIcon"></i></div>
+                <div class="control">
+                    <v-progresscircle>
+                        <i @click.stop="togglePlaying" class="icon-mini" :class="miniIcon"></i>
+                    </v-progresscircle>
+                </div>
                 <div class="control"><i class="icon-playlist"></i></div>
             </div>
         </transition>
@@ -71,6 +75,7 @@
     import animations from 'create-keyframe-animation';
     import {prefixStyle} from 'common/js/dom';
     import ProgressBar from 'base/progress-bar/index.vue';
+    import ProgressCircle from 'base/progress-circle/index.vue';
 
     const transform = prefixStyle('transform');
 
@@ -239,7 +244,8 @@
             }
         },
         components: {
-            'v-progressbar': ProgressBar
+            'v-progressbar': ProgressBar,
+            'v-progresscircle': ProgressCircle
         }
     }
 </script>
