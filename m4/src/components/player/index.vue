@@ -26,6 +26,12 @@
                     </div>
                 </div>
                 <div class="bottom">
+                    <div class="progress-wrapper">
+                        <span class="time time-l">{{format(currentTime)}}</span>
+                        <div class="progress-bar-wrapper">
+                        </div>
+                        <span class="time time-r">{{format(currentSong.duration)}}</span>
+                    </div>
                     <div class="operators">
                         <div class="icon i-left"><i class="icon-sequence"></i></div>
                         <div class="icon i-left" :class="disableClass">
@@ -55,7 +61,7 @@
                 <div class="control"><i class="icon-playlist"></i></div>
             </div>
         </transition>
-        <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error"></audio>
+        <audio @timeupdate="updateTime" ref="audio" :src="currentSong.url" @canplay="ready" @error="error"></audio>
     </div>
 </template>
 
@@ -69,7 +75,8 @@
     export default {
         data(){
             return {
-                songReady: false
+                songReady: false,
+                currentTime: 0  //歌曲播放到的时间
             };
         },
         computed: {
@@ -94,6 +101,11 @@
             ])
         },
         methods: {
+            updateTime(e){
+                //console.log('audio在播放的时候，会派发一个timeupdate的事件');
+                //e.target.currentTime: 获取当前播放到的时间，audio提供
+                this.currentTime = e.target.currentTime;
+            },
             next(){
                 if (!this.songReady) {
                     return;
@@ -179,6 +191,20 @@
                 const x = -(window.innerWidth / 2 - paddingLeft);
                 const y = window.innerHeight - paddingTop - width / 2 - paddingBottom;
                 return {x: x, y: y, scale: scale}
+            },
+            format(interval){
+                interval = interval | 0; //向下取整
+                const minute = this._pad(interval / 60 | 0);
+                const second = this._pad(interval % 60);
+                return `${minute}:${second}`;
+            },
+            _pad(num, n = 2){  //补0
+                let len = num.toString().length;
+                while (len < n) {
+                    num = '0' + num;
+                    len++;
+                }
+                return num;
             },
             ...mapMutations({
                 setFullScreen: 'SET_FULL_SCREEN',
