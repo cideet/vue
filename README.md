@@ -31,7 +31,7 @@ actions.js 封装mutation操作的方法 <br>
 1、定义state，项目会用到的原始数据 <br>
 2、对数据映射，写在getters，可以是函数 <br>
 3、修改state，逻辑的函数名写在mutations.js（包括mutation-types.js） <br>
-4、actions.js，呆会再补充 <br>
+4、一个动作中，多次改变mutation，就需要actions.js <br>
 
 
 
