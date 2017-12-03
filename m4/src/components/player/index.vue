@@ -34,7 +34,9 @@
                         <span class="time time-r">{{format(currentSong.duration)}}</span>
                     </div>
                     <div class="operators">
-                        <div class="icon i-left"><i class="icon-sequence"></i></div>
+                        <div class="icon i-left" @click="changeMode">
+                            <i :class="iconMode"></i>
+                        </div>
                         <div class="icon i-left" :class="disableClass">
                             <i @click="prev" class="icon-prev"></i>
                         </div>
@@ -76,6 +78,7 @@
     import {prefixStyle} from 'common/js/dom';
     import ProgressBar from 'base/progress-bar/index.vue';
     import ProgressCircle from 'base/progress-circle/index.vue';
+    import {playMode} from 'common/js/config.js';
 
     const transform = prefixStyle('transform');
 
@@ -87,6 +90,9 @@
             };
         },
         computed: {
+            iconMode(){
+                return this.mode == playMode.sequence ? 'icon-sequence' : this.mode == playMode.loop ? 'icon-loop' : 'icon-random';
+            },
             percent(){
                 return this.currentTime / this.currentSong.duration;
             },
@@ -107,10 +113,15 @@
                 'playList',
                 'currentSong',
                 'playing',
-                'currentIndex'
+                'currentIndex',
+                'mode'
             ])
         },
         methods: {
+            changeMode(){
+                const mode = (this.mode + 1) % 3;
+                this.setPlayMode(mode);
+            },
             onProgressChange(percent){
                 //拖动进度条，改变播放时间
                 this.$refs.audio.currentTime = this.currentSong.duration * percent;
@@ -227,7 +238,8 @@
             ...mapMutations({
                 setFullScreen: 'SET_FULL_SCREEN',
                 setPlayingState: 'SET_PLAYING_STATE',
-                setCurrentIndex: 'SET_CURRENT_INDEX'
+                setCurrentIndex: 'SET_CURRENT_INDEX',
+                setPlayMode: 'SET_PLAY_MODE'
             })
         },
         watch: {
