@@ -79,6 +79,7 @@
     import ProgressBar from 'base/progress-bar/index.vue';
     import ProgressCircle from 'base/progress-circle/index.vue';
     import {playMode} from 'common/js/config.js';
+    import {shuffle} from 'common/js/util.js';
 
     const transform = prefixStyle('transform');
 
@@ -114,13 +115,28 @@
                 'currentSong',
                 'playing',
                 'currentIndex',
-                'mode'
+                'mode',
+                'sequenceList'
             ])
         },
         methods: {
             changeMode(){
                 const mode = (this.mode + 1) % 3;
                 this.setPlayMode(mode);
+                let list = null;
+                if (mode == playMode.random) {
+                    list = shuffle(this.sequenceList);
+                } else {
+                    list = this.sequenceList;
+                }
+                this.resetCurrentIndex(list);
+                this.setPlayList(list);
+            },
+            resetCurrentIndex(list) {
+                let index = list.findIndex((item) => {
+                    return item.id === this.currentSong.id;
+                });
+                this.setCurrentIndex(index);
             },
             onProgressChange(percent){
                 //拖动进度条，改变播放时间
@@ -193,7 +209,6 @@
                         easing: 'Linear'
                     }
                 });
-
                 animations.runAnimation(this.$refs.cdWrapper, 'move', done);
             },
             afterEnter() {
@@ -239,7 +254,8 @@
                 setFullScreen: 'SET_FULL_SCREEN',
                 setPlayingState: 'SET_PLAYING_STATE',
                 setCurrentIndex: 'SET_CURRENT_INDEX',
-                setPlayMode: 'SET_PLAY_MODE'
+                setPlayMode: 'SET_PLAY_MODE',
+                setPlayList: 'SET_PLAY_LIST'
             })
         },
         watch: {

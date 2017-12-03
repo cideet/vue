@@ -18,7 +18,7 @@ import * as types from './mutation-types.js';
  */
 export const selectPlay = function ({commit, state}, {list, index}) {
     commit(types.SET_SEQUENCE_LIST, list);      //播放顺序列表
-    commit(types.SET_PLAYLIST, list);           //播放的音乐列表
+    commit(types.SET_PLAY_LIST, list);           //播放的音乐列表
     commit(types.SET_CURRENT_INDEX, index);     //当前播放的索引
     commit(types.SET_FULL_SCREEN, true);        //是否全屏
     commit(types.SET_PLAYING_STATE, true);      //播放状态
