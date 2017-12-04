@@ -133,6 +133,7 @@
             },
             loop(){
                 this.$refs.audio.currentTime = 0;
+                this.$refs.audio.play();
             },
             changeMode(){
                 const mode = (this.mode + 1) % 3;

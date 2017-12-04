@@ -47,7 +47,10 @@
                 this._triggerPercent();
             },
             progressClick(e){  //点击进度条
-                this._offset(e.offsetX);
+                //this._offset(e.offsetX);  //好像也可用
+                const rect = this.$refs.progressBar.getBoundingClientRect();
+                const offsetWidth = e.pageX - rect.left;
+                this._offset(offsetWidth);
                 this._triggerPercent();
             },
             _triggerPercent(){
