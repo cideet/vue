@@ -68,7 +68,11 @@
                 <div class="control"><i class="icon-playlist"></i></div>
             </div>
         </transition>
-        <audio @timeupdate="updateTime" ref="audio" :src="currentSong.url" @canplay="ready" @error="error"></audio>
+        <audio ref="audio" :src="currentSong.url"
+               @timeupdate="updateTime"
+               @canplay="ready"
+               @error="error"
+               @ended="end"></audio>
     </div>
 </template>
 
@@ -120,6 +124,16 @@
             ])
         },
         methods: {
+            end(){
+                if (this.mode == playMode.loop) {
+                    this.loop();
+                } else {
+                    this.next();
+                }
+            },
+            loop(){
+                this.$refs.audio.currentTime = 0;
+            },
             changeMode(){
                 const mode = (this.mode + 1) % 3;
                 this.setPlayMode(mode);
