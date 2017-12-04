@@ -24,6 +24,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="middle-r" ref="lyricList">
+                        <div class="lyric-wrapper">
+                            <div v-if="currentLyric">
+                                <p ref="lyricLine" class="text"
+                                   v-for="(line,index) in currentLyric.lines"
+                                   :class="{'current':currentLineNum==index}">{{line.txt}}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="bottom">
                     <div class="progress-wrapper">
@@ -78,6 +87,7 @@
 
 <script type="text/ecmascript-6">
     import Lyric from 'lyric-parser';
+    import Scroll from 'base/scroll/index.vue';
     import {mapGetters, mapMutations} from 'vuex';
     import animations from 'create-keyframe-animation';
     import {prefixStyle} from 'common/js/dom';
@@ -93,7 +103,8 @@
             return {
                 songReady: false,
                 currentTime: 0,  //歌曲播放到的时间
-                currentLyric: null
+                currentLyric: null,
+                currentLineNum: 0,  //当前歌词所在行
             };
         },
         computed: {
@@ -268,6 +279,10 @@
                 return num;
             },
             getLyric() {
+                //this.currentSong.getLyrics().then((lyric)=> {
+                //    this.currentLyric = new Lyric(lyric);
+                //    console.log(this.currentLyric);
+                //})
                 this.currentSong.getLyrics().then((lyric) => {
                     if (this.currentSong.lyric !== lyric) {
                         return;
@@ -325,7 +340,8 @@
         },
         components: {
             'v-progressbar': ProgressBar,
-            'v-progresscircle': ProgressCircle
+            'v-progresscircle': ProgressCircle,
+            'v-scroll': Scroll
         }
     }
 </script>
