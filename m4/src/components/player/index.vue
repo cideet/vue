@@ -24,7 +24,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="middle-r" ref="lyricList">
+                    <v-scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines">
                         <div class="lyric-wrapper">
                             <div v-if="currentLyric">
                                 <p ref="lyricLine" class="text"
@@ -32,7 +32,7 @@
                                    :class="{'current':currentLineNum==index}">{{line.txt}}</p>
                             </div>
                         </div>
-                    </div>
+                    </v-scroll>
                 </div>
                 <div class="bottom">
                     <div class="progress-wrapper">
@@ -302,7 +302,6 @@
                 if (!this.$refs.lyricList) {
                     return;
                 }
-
                 this.currentLineNum = lineNum;
                 if (lineNum > 5) {
                     let lineEl = this.$refs.lyricLine[lineNum - 5];
