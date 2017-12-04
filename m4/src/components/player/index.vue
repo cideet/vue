@@ -77,6 +77,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import Lyric from 'lyric-parser';
     import {mapGetters, mapMutations} from 'vuex';
     import animations from 'create-keyframe-animation';
     import {prefixStyle} from 'common/js/dom';
@@ -91,7 +92,8 @@
         data(){
             return {
                 songReady: false,
-                currentTime: 0  //歌曲播放到的时间
+                currentTime: 0,  //歌曲播放到的时间
+                currentLyric: null
             };
         },
         computed: {
@@ -265,6 +267,37 @@
                 }
                 return num;
             },
+            getLyric() {
+                this.currentSong.getLyrics().then((lyric) => {
+                    if (this.currentSong.lyric !== lyric) {
+                        return;
+                    }
+                    this.currentLyric = new Lyric(lyric, this.handleLyric);
+                    console.log(this.currentLyric);
+                    if (this.playing) {
+                        this.currentLyric.play();
+                    }
+                }).catch(() => {
+                    this.currentLyric = null;
+                    this.palyingLyric = '';
+                    this.currentLineNum = '';
+                });
+            },
+            handleLyric({lineNum, txt}) {
+                if (!this.$refs.lyricList) {
+                    return;
+                }
+
+                this.currentLineNum = lineNum;
+                if (lineNum > 5) {
+                    let lineEl = this.$refs.lyricLine[lineNum - 5];
+                    this.$refs.lyricList.scrollToElement(lineEl, 1000);
+                } else {
+                    this.$refs.lyricList.scrollTo(0, 0, 1000);
+                }
+
+                this.playingLyric = txt;
+            },
             ...mapMutations({
                 setFullScreen: 'SET_FULL_SCREEN',
                 setPlayingState: 'SET_PLAYING_STATE',
@@ -280,6 +313,7 @@
                 }
                 this.$nextTick(()=> {
                     this.$refs.audio.play();
+                    this.getLyric();
                 });
             },
             playing(newPlaying){
