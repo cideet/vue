@@ -23,7 +23,7 @@ export const selectPlay = function ({commit, state}, {list, index}) {
     if (state.mode == playMode.random) {
         let randomList = shuffle(list);
         commit(types.SET_PLAY_LIST, randomList);
-        index = findIndx(randomList, list[index]);
+        index = getIndex(randomList, list[index]);
     } else {
         commit(types.SET_PLAY_LIST, list);           //播放的音乐列表
     }
@@ -41,8 +41,8 @@ export const randomPlay = function ({commit}, {list}) {
     commit(types.SET_PLAYING_STATE, true);
 };
 
-function findIndx(list, song) {
+function getIndex(list, song) {
     return list.findIndex((item)=> {
         return item.id == song.id;
-    })
+    });
 }
