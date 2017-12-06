@@ -16,7 +16,10 @@
                     <h1 class="title" v-html="currentSong.name"></h1>
                     <h2 class="subtitle" v-html="currentSong.singer"></h2>
                 </div>
-                <div class="middle">
+                <div class="middle"
+                     @touchstart.prevent="middleTouchStart"
+                     @touchmove.prevent="middleTouchMove"
+                     @touchend="middleTouchEnd">
                     <div class="middle-l">
                         <div class="cd-wrapper" ref="cdWrapper">
                             <div class="cd" :class="cdClass">
@@ -35,6 +38,10 @@
                     </v-scroll>
                 </div>
                 <div class="bottom">
+                    <div class="dot-wrapper">
+                        <span class="dot" :class="{'active':currentShow=='cd'}"></span>
+                        <span class="dot" :class="{'active':currentShow=='lyric'}"></span>
+                    </div>
                     <div class="progress-wrapper">
                         <span class="time time-l">{{format(currentTime)}}</span>
                         <div class="progress-bar-wrapper">
@@ -90,11 +97,11 @@
     import Scroll from 'base/scroll/index.vue';
     import {mapGetters, mapMutations} from 'vuex';
     import animations from 'create-keyframe-animation';
-    import {prefixStyle} from 'common/js/dom';
     import ProgressBar from 'base/progress-bar/index.vue';
     import ProgressCircle from 'base/progress-circle/index.vue';
     import {playMode} from 'common/js/config.js';
     import {shuffle} from 'common/js/util.js';
+    import {prefixStyle} from 'common/js/dom.js';
 
     const transform = prefixStyle('transform');
 
@@ -103,8 +110,10 @@
             return {
                 songReady: false,
                 currentTime: 0,  //歌曲播放到的时间
-                currentLyric: null,
+                radius: 32,
+                currentLyric: null,  //当前歌曲的歌词
                 currentLineNum: 0,  //当前歌词所在行
+                currentShow: 'cd'  //显示播放器还是歌词
             };
         },
         computed: {
@@ -136,7 +145,36 @@
                 'sequenceList'
             ])
         },
+        created(){
+            this.touch = {}
+        },
         methods: {
+            middleTouchStart(e) {
+                this.touch.initiated = true;
+                this.touch.startX = e.touches[0].pageX;
+                this.touch.startY = e.touches[0].pageY;
+            },
+            middleTouchMove(e) {
+                if (!this.touch.initiated) {
+                    return;
+                }
+
+                const touch = e.touches[0];
+                const deltaX = touch.pageX - this.touch.startX;
+                const deltaY = touch.pageY - this.touch.startY;
+                if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                    return;
+                }
+                const left = this.currentShow === 'cd' ? 0 : -window.innerWidth;
+                const width = Math.min(0, Math.max(-window.innerWidth, left + deltaX));
+                this.touch.percent = Math.abs(width / window.innerWidth);
+                this.$refs.lyricList.$el.style[transform] = `translate3d(${width}px, 0, 0)`;
+                this.$refs.lyricList.$el.style[transitionDuration] = '0';
+                this.$refs.middleL.style.opacity = 1 - this.touch.percent;
+                this.$refs.middleL.style[transitionDuration] = 0;
+            },
+            middleTouchEnd(){
+            },
             end(){
                 if (this.mode == playMode.loop) {
                     this.loop();
@@ -282,7 +320,7 @@
                 //this.currentSong.getLyrics().then((lyric)=> {
                 //    this.currentLyric = new Lyric(lyric);
                 //    console.log(this.currentLyric);
-                //})
+                //});
                 this.currentSong.getLyrics().then((lyric) => {
                     if (this.currentSong.lyric !== lyric) {
                         return;
