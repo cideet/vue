@@ -20,7 +20,7 @@
                      @touchstart.prevent="middleTouchStart"
                      @touchmove.prevent="middleTouchMove"
                      @touchend="middleTouchEnd">
-                    <div class="middle-l">
+                    <div class="middle-l" ref="middleL">
                         <div class="cd-wrapper" ref="cdWrapper">
                             <div class="cd" :class="cdClass">
                                 <img class="image" :src="currentSong.image"/>
@@ -104,6 +104,7 @@
     import {prefixStyle} from 'common/js/dom.js';
 
     const transform = prefixStyle('transform');
+    const transitionDuration = prefixStyle('transitionDuration');
 
     export default {
         data(){
@@ -174,6 +175,33 @@
                 this.$refs.middleL.style[transitionDuration] = 0;
             },
             middleTouchEnd(){
+                let width;
+                let opacity;
+
+                if (this.currentShow === 'cd') {
+                    if (this.touch.percent > 0.1) {
+                        width = -window.innerWidth;
+                        this.currentShow = 'lyric';
+                        opacity = 0;
+                    } else {
+                        width = 0;
+                        opacity = 1;
+                    }
+                } else {
+                    if (this.touch.percent < 0.9) {
+                        width = 1;
+                        opacity = 1;
+                        this.currentShow = 'cd';
+                    } else {
+                        width = -window.innerWidth;
+                        opacity = 0;
+                    }
+                }
+
+                this.$refs.lyricList.$el.style[transform] = `translate3d(${width}px, 0, 0)`;
+                this.$refs.lyricList.$el.style[transitionDuration] = '300ms';
+                this.$refs.middleL.style.opacity = opacity;
+                this.$refs.middleL.style[transitionDuration] = '300ms';
             },
             end(){
                 if (this.mode == playMode.loop) {
