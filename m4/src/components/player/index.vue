@@ -391,6 +391,9 @@
                 if (newSong.id === oldSong.id) {
                     return;
                 }
+                if (this.currentLyric) {  //如果有正在播放的歌曲
+                    this.currentLyric.stop();  //删除定时器
+                }
                 this.$nextTick(()=> {
                     this.$refs.audio.play();
                     this.getLyric();
