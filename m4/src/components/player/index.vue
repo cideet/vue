@@ -280,7 +280,14 @@
                 this.songReady = true;  //比如断网
             },
             togglePlaying(){
+                if (!this.songReady) {
+                    return;
+                }
                 this.setPlayingState(!this.playing);
+                if (this.currentLyric) {
+                    //当歌曲暂停或播放的时候，切换歌词的滚动状态
+                    this.currentLyric.togglePlay();
+                }
             },
             back(){
                 this.setFullScreen(false);
