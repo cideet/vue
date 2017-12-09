@@ -37,7 +37,7 @@
 
 <script type="text/ecmascript-6">
     import Scroll from 'base/scroll/index.vue';
-    import {attr} from 'common/js/dom.js';
+    import {attr} from 'common/js/dom';
     import Loading from 'base/loading/index.vue';
 
     const ANCHOR_HEIGHT = 18;  //右侧导航每个LI的高度
@@ -91,6 +91,9 @@
                 // console.log(delta);  //每次滑动了几个li
                 let anchorIndex = parseInt(this.touch.anchorIndex) + delta;
                 this._scrollTo(anchorIndex);
+            },
+            refresh(){
+                this.$refs.listview.refresh();
             },
             scroll(pos){
                 this.scrollY = pos.y;

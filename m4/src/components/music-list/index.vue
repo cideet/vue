@@ -33,17 +33,22 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import {mapActions} from 'vuex';
+
     import Scroll from 'base/scroll/index.vue';
     import Songlist from 'base/song-list/index.vue';
     import Loading from 'base/loading/index.vue';
-    import {prefixStyle} from 'common/js/dom.js';
-    import {mapActions} from 'vuex';
 
-    const RESERVED_HEIGHT = 40;
+    import {playlistMixin} from 'common/js/mixin';
+    import {prefixStyle} from 'common/js/dom';
+
     const transform = prefixStyle('transform');
     const backdrop = prefixStyle('backgrop-filter');
 
+    const RESERVED_HEIGHT = 40;
+
     export default {
+        mixins: [playlistMixin],
         props: ['bgImage', 'songs', 'title'],
         computed: {
             bgStyle() {
@@ -65,6 +70,11 @@
             this.$refs.list.$el.style.top = this.imageHeight + 'px';
         },
         methods: {
+            handlePlayList(playlist){
+                const bottom = playlist.length > 0 ? '60px' : '';
+                this.$refs.list.$el.style.bottom = bottom;
+                this.$refs.list.refresh();
+            },
             random(){
                 this.randomPlay({list: this.songs});
             },
