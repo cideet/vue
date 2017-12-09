@@ -213,6 +213,10 @@
             loop(){
                 this.$refs.audio.currentTime = 0;
                 this.$refs.audio.play();
+                if (this.currentLyric) {
+                    // 歌词偏移到开始
+                    this.currentLyric.seek(0);
+                }
             },
             changeMode(){
                 const mode = (this.mode + 1) % 3;
@@ -234,11 +238,16 @@
             },
             onProgressChange(percent){
                 //拖动进度条，改变播放时间
-                this.$refs.audio.currentTime = this.currentSong.duration * percent;
+                const currentTime = this.currentSong.duration * percent;
+                this.$refs.audio.currentTime = currentTime;
                 if (!this.playing) {
                     this.setPlayingState(true);
                 }
                 this.$refs.audio.play();
+                if (this.currentLyric) {
+                    // 拖动进度，改变歌词滚动的位置
+                    this.currentLyric.seek(currentTime * 1000);
+                }
             },
             updateTime(e){
                 //console.log('audio在播放的时候，会派发一个timeupdate的事件');
