@@ -26,6 +26,9 @@
                                 <img class="image" :src="currentSong.image"/>
                             </div>
                         </div>
+                        <div class="playing-lyric-wrapper">
+                            <div class="playing-lyric">{{playingLyric}}</div>
+                        </div>
                     </div>
                     <v-scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines">
                         <div class="lyric-wrapper">
@@ -114,7 +117,8 @@
                 radius: 32,
                 currentLyric: null,  //当前歌曲的歌词
                 currentLineNum: 0,  //当前歌词所在行
-                currentShow: 'cd'  //显示播放器还是歌词
+                currentShow: 'cd',  //显示播放器还是歌词
+                playingLyric: ''  //当前播放的单句歌词
             };
         },
         computed: {
@@ -258,13 +262,18 @@
                 if (!this.songReady) {
                     return;
                 }
-                let index = this.currentIndex + 1;
-                if (index == this.playList.length) {
-                    index = 0;
-                }
-                this.setCurrentIndex(index);
-                if (!this.playing) {
-                    this.togglePlaying();
+                if (this.playList.length == 1) {
+                    // 如果歌单中只有一首歌，就单曲循环
+                    this.loop();
+                } else {
+                    let index = this.currentIndex + 1;
+                    if (index == this.playList.length) {
+                        index = 0;
+                    }
+                    this.setCurrentIndex(index);
+                    if (!this.playing) {
+                        this.togglePlaying();
+                    }
                 }
                 this.songReady = false;
             },
@@ -272,13 +281,18 @@
                 if (!this.songReady) {
                     return;
                 }
-                let index = this.currentIndex - 1;
-                if (index == -1) {
-                    index = this.playList.length;
-                }
-                this.setCurrentIndex(index);
-                if (!this.playing) {
-                    this.togglePlaying();
+                if (this.playList.length == 1) {
+                    // 如果歌单中只有一首歌，就单曲循环
+                    this.loop();
+                } else {
+                    let index = this.currentIndex - 1;
+                    if (index == -1) {
+                        index = this.playList.length;
+                    }
+                    this.setCurrentIndex(index);
+                    if (!this.playing) {
+                        this.togglePlaying();
+                    }
                 }
                 this.songReady = false;
             },
@@ -361,10 +375,6 @@
                 return num;
             },
             getLyric() {
-                //this.currentSong.getLyrics().then((lyric)=> {
-                //    this.currentLyric = new Lyric(lyric);
-                //    console.log(this.currentLyric);
-                //});
                 this.currentSong.getLyrics().then((lyric) => {
                     if (this.currentSong.lyric !== lyric) {
                         return;
@@ -376,7 +386,7 @@
                     }
                 }).catch(() => {
                     this.currentLyric = null;
-                    this.palyingLyric = '';
+                    this.playingLyric = '';
                     this.currentLineNum = '';
                 });
             },
@@ -391,7 +401,7 @@
                 } else {
                     this.$refs.lyricList.scrollTo(0, 0, 1000);
                 }
-
+                //当前播放的单句歌词
                 this.playingLyric = txt;
             },
             ...mapMutations({
@@ -410,10 +420,10 @@
                 if (this.currentLyric) {  //如果有正在播放的歌曲
                     this.currentLyric.stop();  //删除定时器
                 }
-                this.$nextTick(()=> {
+                setTimeout(()=> {
                     this.$refs.audio.play();
                     this.getLyric();
-                });
+                }, 1000);
             },
             playing(newPlaying){
                 const audio = this.$refs.audio;
