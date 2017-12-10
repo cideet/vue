@@ -65,6 +65,21 @@ apiRoutes.get('/lyric', function (req, res) {
     });
 });
 
+apiRoutes.get('/getTopL', function (req, res) {
+    const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg';
+    axios.get(url, {
+        headers: {
+            referer: 'https://y.qq.com/portal/playlist.html',
+            host: 'c.y.qq.com'
+        },
+        params: req.query
+    }).then((response) => {
+        res.json(response.data);
+    }).catch((e) => {
+        console.log(e);
+    });
+});
+
 app.use('/api', apiRoutes)
 
 var compiler = webpack(webpackConfig)
