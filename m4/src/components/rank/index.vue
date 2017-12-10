@@ -2,7 +2,7 @@
     <div class="rank-wrapper" ref="rank">
         <v-scroll :data="topList" class="toplist" ref="list">
             <ul>
-                <li class="item" v-for="item in topList">
+                <li @click="selectItem(item)" class="item" v-for="item in topList">
                     <div class="icon">
                         <img width="100" height="100" v-lazy="item.picUrl"/>
                     </div>
@@ -28,6 +28,7 @@
     import Scroll from 'base/scroll/index.vue';
     import Loading from 'base/loading/index.vue';
     import {playlistMixin} from '../../common/js/mixin.js';
+    import {mapMutations} from 'vuex';
 
     export default{
         mixins: [playlistMixin],
@@ -40,6 +41,12 @@
             }
         },
         methods: {
+            selectItem(item){
+                this.$router.push({
+                    path: `/rank/${item.id}`
+                });
+                this.setTopList(item);
+            },
             _getTopList(){
                 getTopList().then((res)=> {
                     if (res.code == ERR_OK) {
@@ -52,7 +59,10 @@
                 const bottom = playlist.length ? '60px' : '';
                 this.$refs.rank.style.bottom = bottom;
                 this.$refs.list.refresh();
-            }
+            },
+            ...mapMutations({
+                setTopList: 'SET_TOP_LIST'
+            })
         },
         components: {
             'v-scroll': Scroll,

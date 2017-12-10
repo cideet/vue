@@ -5,25 +5,19 @@
         </div>
         <h1 class="title" v-html="title"></h1>
         <div class="bg-image" :style="bgStyle" ref="bgImage">
-            <div class="play-wrapper">
-                <div class="play" v-show="songs.length>0"
-                     @click="random"
-                     ref="playBtn">
+            <div class="play-wrapper" ref="playWrapper">
+                <div class="play" @click="random" v-show="songs.length>0">
                     <i class="icon-play"></i>
                     <span class="text">随机播放全部</span>
                 </div>
             </div>
             <div class="filter" ref="filter"></div>
         </div>
-        <div class="bg-layer" ref="layer"></div>
-        <v-scroll :probe-type="probeType"
-                  :listen-scroll="listenScroll"
-                  :data="songs"
-                  @scroll="scroll"
-                  class="list"
-                  ref="list">
+        <div class="bg-layer" ref="bgLayer"></div>
+        <v-scroll @scrollBs="scroll" :data="songs" class="list" ref="list" :probe-type="probeType"
+                  :listen-scroll="listenScroll">
             <div class="song-list-wrapper">
-                <v-songlist @select="selectItem" :songs="songs"></v-songlist>
+                <v-song-list @select="selectItem" :songs="songs" :rank="rank"></v-song-list>
             </div>
             <div class="loading-container" v-show="!songs.length">
                 <v-loading></v-loading>
@@ -33,60 +27,86 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {mapActions} from 'vuex';
-
     import Scroll from 'base/scroll/index.vue';
-    import Songlist from 'base/song-list/index.vue';
-    import Loading from 'base/loading/index.vue';
-
-    import {playlistMixin} from 'common/js/mixin';
+    import SongList from 'base/song-list/index.vue';
     import {prefixStyle} from 'common/js/dom';
-
-    const transform = prefixStyle('transform');
-    const backdrop = prefixStyle('backgrop-filter');
+    import Loading from 'base/loading/index.vue';
+    import {mapActions} from 'vuex';
+    import {playlistMixin} from 'common/js/mixin';
 
     const RESERVED_HEIGHT = 40;
+    const transform = prefixStyle('transform');
+    const backdrop = prefixStyle('backdrop');
 
     export default {
-        mixins: [playlistMixin],
-        props: ['bgImage', 'songs', 'title'],
+        mixins: [
+            playlistMixin // mixin的使用
+        ],
+        props: {
+            bgImage: {
+                type: String,
+                default: ''
+            },
+            songs: {
+                type: Array,
+                default() {
+                    return [];
+                }
+            },
+            title: {
+                type: String,
+                default: ''
+            },
+            rank: {
+                type: Boolean,
+                default: false
+            }
+        },
+        data() {
+            return {
+                scrollY: 0
+            }
+        },
+        components: {
+            'v-scroll': Scroll,
+            'v-song-list': SongList,
+            'v-loading': Loading
+        },
         computed: {
             bgStyle() {
                 return `background-image: url(${this.bgImage})`;
             }
         },
-        data(){
-            return {
-                scrollY: 0
-            }
+        mounted() {
+            this.minTranslateY = -this.$refs.bgImage.clientHeight + RESERVED_HEIGHT;
+            this.$refs.list.$el.style.top = `${this.$refs.bgImage.clientHeight}px`;
         },
-        created(){
+        created() {
             this.probeType = 3;
             this.listenScroll = true;
         },
-        mounted(){
-            this.imageHeight = this.$refs.bgImage.clientHeight;
-            this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT;
-            this.$refs.list.$el.style.top = this.imageHeight + 'px';
-        },
         methods: {
-            handlePlayList(playlist){
+            scroll(pos) {
+                this.scrollY = pos.y;
+            },
+            back() {
+                this.$router.back();
+            },
+            selectItem(item, index) {
+                this.selectPlay({
+                    list: this.songs,
+                    index: index
+                });
+            },
+            random() {
+                this.randomPlay({
+                    list: this.songs
+                });
+            },
+            handlePlayList(playlist) {
                 const bottom = playlist.length > 0 ? '60px' : '';
                 this.$refs.list.$el.style.bottom = bottom;
                 this.$refs.list.refresh();
-            },
-            random(){
-                this.randomPlay({list: this.songs});
-            },
-            scroll(pos){
-                this.scrollY = pos.y;
-                // console.log(this.scrollY);
-            },
-            back(){
-                this.$router.back();
-            },
-            selectItem(item, index){
-                this.selectPlay({list: this.songs, index: index});
             },
             ...mapActions([
                 'selectPlay',
@@ -94,47 +114,41 @@
             ])
         },
         watch: {
-            scrollY(newY){
+            scrollY(newY) {
                 let translateY = Math.max(this.minTranslateY, newY);
                 let zIndex = 0;
-                let scale = 1;  //头像的放大比例
-                let blur = 0;  //头像模糊
-                const percent = Math.abs(newY / this.imageHeight);
-                this.$refs.layer.style[transform] = `translate3d(0,${translateY}px,0)`;
-                //this.$refs.layer.style['transform'] = `translate3d(0,${translateY}px,0)`;
-                //this.$refs.layer.style['webkitTransform'] = `translate3d(0,${translateY}px,0)`;
+                let scale = 1;
+                let blur = 0;
+                this.$refs.bgLayer.style[transform] = `translate3d(0, ${translateY}px, 0)`;
                 if (newY < this.minTranslateY) {
                     zIndex = 10;
                     this.$refs.bgImage.style.paddingTop = 0;
-                    this.$refs.bgImage.style.height = RESERVED_HEIGHT + 'px';
-                    this.$refs.playBtn.style.display = 'none';
+                    this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}px`;
+                    this.$refs.playWrapper.style.display = 'none';
                 } else {
                     this.$refs.bgImage.style.paddingTop = '70%';
                     this.$refs.bgImage.style.height = 0;
-                    this.$refs.playBtn.style.display = '';
+                    this.$refs.playWrapper.style.display = '';
                 }
+                const percent = Math.abs(newY / this.minTranslateY);
                 if (newY > 0) {
                     scale = 1 + percent;
-                    zIndex = 10;
+                    zIndex = 9;
                 } else {
                     blur = Math.min(20 * percent, 20);
                 }
-                this.$refs.filter.style[backdrop] = `blur(${blur}px)`;
+
                 this.$refs.bgImage.style.zIndex = zIndex;
                 this.$refs.bgImage.style[transform] = `scale(${scale})`;
+                this.$refs.filter.style[backdrop] = `blur(${blur}px)`;
             }
-        },
-        components: {
-            'v-scroll': Scroll,
-            'v-songlist': Songlist,
-            'v-loading': Loading
         }
-    }
+    };
 </script>
 
-<style lang="less" rel="stylesheet/less">
-    @import url('../../common/less/variable.less');
-    @import url('../../common/less/mixin.less');
+<style rel="stylesheet/less" lang="less">
+    @import url('../../common/less/variable');
+    @import url('../../common/less/mixin');
 
     .music-list {
         position: fixed;
@@ -216,7 +230,6 @@
             position: relative;
             height: 100%;
             background: @color-background;
-            //background: red;
         }
         .list {
             /*overflow: hidden;*/

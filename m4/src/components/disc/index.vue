@@ -36,8 +36,9 @@
         },
         methods: {
             _getSongList() {
-                //if (!this.disc.dissid) {
                 this.$router.push('/recommend');
+                //if (!this.disc.dissid) {
+                //    this.$router.push('/recommend');
                 //}
                 //getSongList(this.disc.dissid).then((res) => {
                 //    console.log(res);
