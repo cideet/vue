@@ -1,6 +1,7 @@
 <template>
     <transition name="slide">
         <v-musiclist
+                :rank="rank"
                 :title="title"
                 :bg-image="bgImage"
                 :songs="songs"></v-musiclist>
@@ -32,7 +33,8 @@
         },
         data(){
             return {
-                songs: []
+                songs: [],
+                rank: true
             }
         },
         methods: {
