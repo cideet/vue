@@ -35,6 +35,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+    import {mapMutations} from 'vuex';
+
     import Slider from 'base/slider/index.vue';
     import Scroll from 'base/scroll/index.vue';
     import Loading from 'base/loading/index.vue';
@@ -57,9 +59,12 @@
         },
         methods: {
             selectItem(item){
+                console.log(item)
+                //return;
                 this.$router.push({
                     path: `/recommend/${item.dissid}`
                 });
+                this.setDisc(item);  //将disc写入state
             },
             handlePlayList(playlist){
                 const bottom = playlist.length > 0 ? '60px' : '';
@@ -89,7 +94,10 @@
                     this.checkloaded = true;
                     this.$refs.scroll.refresh();
                 }
-            }
+            },
+            ...mapMutations({
+                setDisc: 'SET_DISC'
+            })
         },
         components: {
             'v-slider': Slider,

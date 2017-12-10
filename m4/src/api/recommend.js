@@ -42,3 +42,49 @@ export function getDiscList() {
         return Promise.resolve(res.data)
     })
 }
+
+/**
+ * 获取歌曲列表
+ * @param disstid
+ */
+
+export function getSongList(disstid) {
+    const url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg';
+    const data = Object.assign({}, commonParams, {
+        disstid,
+        type: 1,
+        json: 1,
+        utf8: 1,
+        g_tk: 1312469004,
+        onlysong: 0,
+        platform: 'yqq',
+        hostUin: 0,
+        needNewCode: 0,
+        loginUin: 0,
+        format: 'jsonp'
+    })
+
+    //return jsonp(url, data, options)
+    return jsonp(url, data, Object.assign({}, options, {name: 'playlistinfoCallback'}));
+}
+
+
+// export function getSongList(disstid) {
+//     const url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg';
+//
+//     const data = Object.assign({}, commonParams, {
+//         type: 1,
+//         json: 1,
+//         utf8: 1,
+//         onlysong: 0,
+//         disstid,
+//         g_tk: 1312469004,
+//         loginUin: 0,
+//         hostUin: 0,
+//         platform: 'yqq',
+//         needNewCode: 0,
+//         format: 'jsonp'
+//     });
+//
+//     return jsonp(url, data, Object.assign({}, options, {name: 'playlistinfoCallback'}));
+// }
