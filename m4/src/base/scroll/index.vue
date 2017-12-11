@@ -13,7 +13,7 @@
             click: {type: Boolean, default: true},
             listenScroll: {type: Boolean, default: false},  //要不要监听滚动事件
             data: {type: Array, default: null},
-            pullup: {type: Boolean, default: false},
+            pullup: {type: Boolean, default: false},  //上拉刷新
             beforeScroll: {type: Boolean, default: false},
             refreshDelay: {type: Number, default: 20}
         },

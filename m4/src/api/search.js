@@ -19,6 +19,14 @@ export function getHotKey() {
     return jsonp(url, data, options);
 }
 
+/**
+ *
+ * @param query 检索词
+ * @param page 第几页
+ * @param zhida 是否检索歌手
+ * @param perpage
+ * @returns {*}
+ */
 export function search(query, page, zhida, perpage) {
     const url = 'api/getSearchSong';
 

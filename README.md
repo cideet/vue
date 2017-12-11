@@ -33,7 +33,7 @@ actions.js 封装mutation操作的方法 <br>
 3、修改state，逻辑的函数名写在mutations.js（包括mutation-types.js） <br>
 4、一个动作中，多次改变mutation，就需要actions.js <br>
 
-
+... es6扩展符 <br>
 
 
 
