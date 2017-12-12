@@ -19,7 +19,7 @@
             <v-loading v-show="hasMore" title=""></v-loading>
         </ul>
         <div v-show="!hasMore && !result.length" class="no-result-wrapper">
-            <!--<v-no-result title="抱歉，暂无搜索结果"></v-no-result>-->
+            <v-noresult title="抱歉，暂无搜索结果"></v-noresult>
         </div>
     </v-scroll>
 </template>
@@ -32,7 +32,7 @@
     import Loading from '../../base/loading/index.vue';
     import Singer from '../../common/js/singer.js';
     import {mapMutations, mapActions} from 'vuex';
-    //import NoResult from '../../base/no-result/index.vue';
+    import NoResult from '../../base/no-result/index.vue';
 
     const TYPE_SINGER = 'singer';
     const perpage = 20;
@@ -154,7 +154,7 @@
         components: {
             'v-scroll': Scroll,
             'v-loading': Loading,
-            //'v-no-result': NoResult
+            'v-noresult': NoResult
         }
     };
 </script>
