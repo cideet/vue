@@ -50,6 +50,10 @@ export function saveSearch(query) {
     return searchs;
 }
 
+/**
+ * 获取localstorage
+ * @returns {*}
+ */
 export function loadSearch() {
     return storage.get(SEARCH_KEY, []);
 }
