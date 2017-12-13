@@ -5,8 +5,9 @@
 //另一种是对mutation的封装
 
 import * as types from './mutation-types.js';
-import {playMode} from 'common/js/config.js';
-import {shuffle} from'common/js/util.js';
+import {playMode} from '../common/js/config.js';
+import {shuffle} from'../common/js/util.js';
+import {saveSearch, deleteSearch, clearSearch, savePlay, saveFavorite, deleteFavorite} from '../common/js/cache.js';
 
 /**
  * 选择播放
@@ -91,9 +92,9 @@ export function insertSong({commit, state}, song) {
     commit(types.SET_PLAYING_STATE, true);
 }
 
-// export function saveSearchHistroy({commit}, query) {
-//     commit(types.SET_SEACH_HISTRY, saveSearch(query));
-// }
+export function saveSearchHistory({commit}, query) {
+    commit(types.SET_SEARCH_HISTORY, saveSearch(query));
+}
 //
 // export function deleteSearchHistory({commit}, query) {
 //     commit(types.SET_SEACH_HISTRY, deleteSearch(query));

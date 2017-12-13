@@ -2,7 +2,7 @@
  * Created by sf on 2017/12/1.
  */
 
-import {playMode} from 'common/js/config.js';
+import {playMode} from '../common/js/config.js';
 
 const state = {
     singer: {},  //歌手
@@ -13,7 +13,8 @@ const state = {
     mode: playMode.sequence,  //播放模式
     currentIndex: -1,  //当前播放的索引
     disc: {},  //歌单
-    topList: {}
+    topList: {},
+    searchHistory: []  //搜索历史
 };
 
 export default state;
