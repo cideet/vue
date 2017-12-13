@@ -3,6 +3,7 @@
         <i class="icon-search"></i>
         <input class="box"
                v-model="query"
+               ref="query"
                :placeholder="placeholder"/>
         <i class="icon-dismiss"
            @click="clear"
@@ -31,6 +32,9 @@
             },
             clear(){
                 this.query = '';
+            },
+            blur(){
+                this.$refs.query.blur();
             }
         },
         created(){

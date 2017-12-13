@@ -44,7 +44,7 @@
                 result: [],
                 pullup: true,  //上拉刷新
                 hasMore: true,
-                beforeScroll: true
+                beforeScroll: true  //手机阻止输入框弹出
             };
         },
         props: {
