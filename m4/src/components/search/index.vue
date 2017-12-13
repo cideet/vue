@@ -1,79 +1,112 @@
 <template>
     <div class="search">
         <div class="search-box-wrapper">
-            <v-searchbox @query="onQueryChange" ref="searchBox"></v-searchbox>
+            <v-search-box ref="searchBox" @query="onQueryChange"></v-search-box>
         </div>
-        <div class="shortcut-wrapper" v-show="!query">
-            <div class="shortcut">
-                <div class="hot-key">
-                    <h1 class="title">热门搜索</h1>
-                    <ul>
-                        <li @click="addQuery(item)" class="item" v-for="item in hotKey">
-                            <span>{{item.k}}</span>
-                        </li>
-                    </ul>
+        <div class="shortcut-wrapper" ref="shortcutWrapper" v-show="!query">
+            <v-scroll class="shortcut" :refreshDelay="refreshDelay" ref="shortcut" :data="shortcut">
+                <div>
+                    <div class="hot-key">
+                        <h1 class="title">热门搜索</h1>
+                        <ul>
+                            <li v-for="item in hotKey" class="item" @click="addQuery(item)">
+                                <span>{{ item.k }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="search-history" v-show="searchHistory.length">
+                        <h1 class="title">
+                            <span class="text">搜索历史</span>
+              <span class="clear" @click="showConfirm">
+              <i class="icon-clear"></i>
+            </span>
+                        </h1>
+                        <v-search-list @select="setQuery" @delete="deleteSearchHistory" :searches="searchHistory"></v-search-list>
+                    </div>
                 </div>
-            </div>
+            </v-scroll>
         </div>
-        <div class="search-result" v-show="query">
-            <v-suggest ref="suggest"
-                    @listScroll="blurInput"
-                    @select="saveSearch"
-                    :query="query"></v-suggest>
+        <div class="search-result" ref="searchResult" v-show="query">
+            <v-suggest :query="query" @listScroll="blurInput" @select="saveSearch" ref="suggest"></v-suggest>
         </div>
+        <v-confirm ref="confirm" text="是否清空所有搜索历史" confirmBtnText="清空" @confirm="clearSearchHistory"></v-confirm>
         <router-view></router-view>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
-    import SearchBox from '../../base/search-box/index.vue';
-    import {getHotKey} from 'api/search';
-    import {ERR_OK} from '../../api/config.js';
-    import Suggest from '../../components/suggest/index.vue';
+    import Suggest from 'components/suggest/index';
+    import SearchBox from 'base/search-box/index';
+    import SearchList from 'base/search-list/index';
+    import Confirm from 'base/confirm/index';
+    import Scroll from 'base/scroll/index';
     import {mapActions} from 'vuex';
+    import {getHotKey} from 'api/search';
+    import {ERR_OK} from 'api/config';
+    import {playlistMixin, searchMixin} from 'common/js/mixin';
 
-    export default{
-        created(){
-            this._getHotKey();
-        },
-        data(){
+    export default {
+        mixins: [playlistMixin, searchMixin],
+        data() {
             return {
                 hotKey: [],
                 query: ''
+            };
+        },
+        components: {
+            'v-search-box': SearchBox,
+            'v-suggest': Suggest,
+            'v-search-list': SearchList,
+            'v-confirm': Confirm,
+            'v-scroll': Scroll
+        },
+        computed: {
+            shortcut() {
+                return this.hotKey.concat(this.searchHistory);
             }
         },
         methods: {
-            saveSearch(){
-                this.saveSearchHistory(this.query);
+            setQuery(item) {
+                this.$refs.searchBox.setQuery({k: item});
             },
-            onQueryChange(query){
-                this.query = query;
+            showConfirm() {
+                this.$refs.confirm.show();
             },
-            addQuery(query){
-                this.$refs.searchBox.setQuery(query.k);
+            handlePlayList(playlist) {
+                const bottom = playlist.length > 0 ? '60px' : '';
+                this.$refs.shortcutWrapper.style.bottom = bottom;
+                this.$refs.shortcut.refresh();
+
+                this.$refs.searchResult.style.bottom = bottom;
+                this.$refs.suggest.refresh();
             },
-            blurInput(){
-                this.$refs.searchBox.blur();
-            },
-            _getHotKey(){
-                getHotKey().then((res)=> {
-                    if (res.code == ERR_OK) {
+            _getHotKey() {
+                getHotKey().then((res) => {
+                    if (res.code === ERR_OK) {
                         this.hotKey = res.data.hotkey.slice(0, 10);
                     }
                 });
             },
             ...mapActions([
-                'saveSearchHistory'
+                'clearSearchHistory'
             ])
         },
-        components: {
-            'v-searchbox': SearchBox,
-            'v-suggest': Suggest
+        created() {
+            this._getHotKey();
+        },
+        watch: {
+            query(newQuery) {
+                if (!newQuery) {
+                    setTimeout(() => {
+                        this.$refs.shortcut.refresh();
+                    }, 20);
+                }
+            }
         }
-    }
+    };
 </script>
 
-<style lang="less" rel="stylesheet/less">
+<style rel="stylesheet/less" lang="less">
     @import url('../../common/less/variable');
     @import url('../../common/less/mixin');
 

@@ -1,14 +1,8 @@
 <template>
-    <v-scroll class="suggest"
-              :data="result"
-              :pullup="pullup"
-              @scrollToEnd="searchMore"
-              @beforeScroll="listScroll"
-              :beforeScroll="beforeScroll"
-              ref="suggest">
+    <v-scroll class="suggest" :data="result" :pullup="pullup" @scrollToEnd="searchMore" @beforeScroll="listScroll"
+              :beforeScroll="beforeScroll" ref="suggest">
         <ul class="suggest-list">
-            <li @click="selectItem(item)" class="suggest-item"
-                v-for="item in result">
+            <li @click="selectItem(item)" class="suggest-item" v-for="item in result">
                 <div class="icon">
                     <i :class="getIconCls(item)"></i>
                 </div>
@@ -19,20 +13,20 @@
             <v-loading v-show="hasMore" title=""></v-loading>
         </ul>
         <div v-show="!hasMore && !result.length" class="no-result-wrapper">
-            <v-noresult title="抱歉，暂无搜索结果"></v-noresult>
+            <v-no-result title="抱歉，暂无搜索结果"></v-no-result>
         </div>
     </v-scroll>
 </template>
 
 <script type="text/ecmascript-6">
-    import {search} from '../../api/search.js';
-    import {ERR_OK} from '../../api/config.js';
-    import {createSong} from '../../common/js/song.js';
-    import Scroll from '../../base/scroll/index.vue';
-    import Loading from '../../base/loading/index.vue';
-    import Singer from '../../common/js/singer.js';
+    import {search} from 'api/search';
+    import {ERR_OK} from 'api/config';
+    import {createSong} from 'common/js/song';
+    import Scroll from 'base/scroll/index';
+    import Loading from 'base/loading/index';
+    import Singer from 'common/js/singer';
     import {mapMutations, mapActions} from 'vuex';
-    import NoResult from '../../base/no-result/index.vue';
+    import NoResult from 'base/no-result/index';
 
     const TYPE_SINGER = 'singer';
     const perpage = 20;
@@ -40,11 +34,11 @@
     export default {
         data() {
             return {
-                page: 1,  //当前第几页
+                page: 1,
                 result: [],
-                pullup: true,  //上拉刷新
+                pullup: true,
                 hasMore: true,
-                beforeScroll: true  //手机阻止输入框弹出
+                beforeScroll: true
             };
         },
         props: {
@@ -52,16 +46,14 @@
                 type: String,
                 default: ''
             },
-            showSinger: {  //是否显示歌手
+            showSinger: {
                 type: Boolean,
                 default: true
             }
         },
         methods: {
             search() {
-                this.page = 1;
                 this.hasMore = true;
-                this.$refs.suggest.scrollTo(0, 0);
                 search(this.query, this.page, this.showSinger, perpage).then((res) => {
                     if (res.code === ERR_OK) {
                         this.result = this._genResult(res.data);
@@ -85,6 +77,7 @@
                 if (!this.hasMore) {
                     return;
                 }
+
                 this.page++;
                 search(this.query, this.page, this.showSinger, perpage).then((res) => {
                     if (res.code === ERR_OK) {
@@ -99,13 +92,16 @@
                         id: item.singermid,
                         name: item.singername
                     });
+
                     this.$router.push({
                         path: `/search/${singer.id}`
                     });
+
                     this.setSinger(singer);
                 } else {
                     this.insertSong(item);
                 }
+
                 this.$emit('select');
             },
             refresh() {
@@ -116,12 +112,15 @@
             },
             _genResult(data) {
                 let ret = [];
+
                 if (data.zhida && data.zhida.singerid) {
                     ret.push({...data.zhida, ...{type: TYPE_SINGER}});
                 }
+
                 if (data.song) {
                     ret = ret.concat(this._normalizeSongs(data.song.list));
                 }
+
                 return ret;
             },
             _normalizeSongs(list) {
@@ -131,6 +130,7 @@
                         ret.push(createSong(musicData));
                     }
                 });
+
                 return ret;
             },
             _checkMore(data) {
@@ -154,7 +154,7 @@
         components: {
             'v-scroll': Scroll,
             'v-loading': Loading,
-            'v-noresult': NoResult
+            'v-no-result': NoResult
         }
     };
 </script>
