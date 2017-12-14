@@ -12,13 +12,13 @@ import 'common/less/index.less';
 
 fastclick.attach(document.body); // 没有300ms的延时
 Vue.use(VueLazyLoad, {
-  loading: require('common/image/default.png')
+    loading: require('common/image/default.png')
 });
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  store,
-  render: h => h(App)
+    el: '#app',
+    router,
+    store,
+    render: h => h(App)
 });

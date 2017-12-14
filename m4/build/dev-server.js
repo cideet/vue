@@ -2,7 +2,7 @@ require('./check-versions')()
 
 var config = require('../config')
 if (!process.env.NODE_ENV) {
-  process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
+    process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
 
 var opn = require('opn')
@@ -26,106 +26,106 @@ var app = express()
 var apiRouter = express.Router();
 
 apiRouter.get('/getDiscList', function (req, res) {
-  const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg';
+    const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg';
 
-  axios.get(url, {
-    headers: {
-      referer: 'https://y.qq.com/portal/playlist.html',
-      host: 'c.y.qq.com'
-    },
-    params: req.query
-  }).then((response) => {
-    res.json(response.data);
-  }).catch((e) => {
-    console.log(e);
-  });
+    axios.get(url, {
+        headers: {
+            referer: 'https://y.qq.com/portal/playlist.html',
+            host: 'c.y.qq.com'
+        },
+        params: req.query
+    }).then((response) => {
+        res.json(response.data);
+    }).catch((e) => {
+        console.log(e);
+    });
 });
 
 apiRouter.get('/getTopL', function (req, res) {
-  const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg';
+    const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg';
 
-  axios.get(url, {
-    headers: {
-      referer: 'https://y.qq.com/portal/playlist.html',
-      host: 'c.y.qq.com'
-    },
-    params: req.query
-  }).then((response) => {
-    res.json(response.data);
-  }).catch((e) => {
-    console.log(e);
-  });
+    axios.get(url, {
+        headers: {
+            referer: 'https://y.qq.com/portal/playlist.html',
+            host: 'c.y.qq.com'
+        },
+        params: req.query
+    }).then((response) => {
+        res.json(response.data);
+    }).catch((e) => {
+        console.log(e);
+    });
 });
 
 apiRouter.get('/getSearchSong', function (req, res) {
-  const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp';
+    const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp';
 
-  axios.get(url, {
-    headers: {
-      referer: 'https://y.qq.com/portal/playlist.html',
-      host: 'c.y.qq.com'
-    },
-    params: req.query
-  }).then((response) => {
-    res.json(response.data);
-  }).catch((e) => {
-    console.log(e);
-  });
+    axios.get(url, {
+        headers: {
+            referer: 'https://y.qq.com/portal/playlist.html',
+            host: 'c.y.qq.com'
+        },
+        params: req.query
+    }).then((response) => {
+        res.json(response.data);
+    }).catch((e) => {
+        console.log(e);
+    });
 });
 
 apiRouter.get('/lyric', function (req, res) {
-  const url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg';
+    const url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg';
 
-  axios.get(url, {
-    headers: {
-      referer: 'https://y.qq.com/portal/player.html',
-      host: 'c.y.qq.com'
-    },
-    params: req.query
-  }).then((response) => {
-    var ret = response.data;
-    if (typeof ret === 'string') {
-      var reg = /^\w+\(({[^()]+})\)$/;
-      var matches = ret.match(reg);
-      if (matches) {
-        ret = JSON.parse(matches[1]);
-      }
-    }
+    axios.get(url, {
+        headers: {
+            referer: 'https://y.qq.com/portal/player.html',
+            host: 'c.y.qq.com'
+        },
+        params: req.query
+    }).then((response) => {
+        var ret = response.data;
+        if (typeof ret === 'string') {
+            var reg = /^\w+\(({[^()]+})\)$/;
+            var matches = ret.match(reg);
+            if (matches) {
+                ret = JSON.parse(matches[1]);
+            }
+        }
 
-    res.json(ret);
-  }).catch((e) => {
-    console.log(e);
-  });
+        res.json(ret);
+    }).catch((e) => {
+        console.log(e);
+    });
 });
 
 app.use('/api', apiRouter);
 var compiler = webpack(webpackConfig)
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
-  publicPath: webpackConfig.output.publicPath,
-  quiet: true
+    publicPath: webpackConfig.output.publicPath,
+    quiet: true
 })
 
 var hotMiddleware = require('webpack-hot-middleware')(compiler, {
-  log: () => {
-  },
-  heartbeat: 2000
+    log: () => {
+    },
+    heartbeat: 2000
 })
 // force page reload when html-webpack-plugin template changes
 compiler.plugin('compilation', function (compilation) {
-  compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
-    hotMiddleware.publish({action: 'reload'})
-    cb()
-  })
+    compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
+        hotMiddleware.publish({action: 'reload'})
+        cb()
+    })
 })
 
 // proxy api requests
 Object.keys(proxyTable).forEach(function (context) {
-  var options = proxyTable[context]
-  if (typeof options === 'string') {
-    options = {target: options}
-  }
-  app.use(proxyMiddleware(options.filter || context, options))
+    var options = proxyTable[context]
+    if (typeof options === 'string') {
+        options = {target: options}
+    }
+    app.use(proxyMiddleware(options.filter || context, options))
 })
 
 // handle fallback for HTML5 history API
@@ -146,24 +146,24 @@ var uri = 'http://localhost:' + port
 
 var _resolve
 var readyPromise = new Promise(resolve => {
-  _resolve = resolve
+    _resolve = resolve
 })
 
 console.log('> Starting dev server...')
 devMiddleware.waitUntilValid(() => {
-  console.log('> Listening at ' + uri + '\n')
-  // when env is testing, don't need open it
-  if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
-    opn(uri)
-  }
-  _resolve()
+    console.log('> Listening at ' + uri + '\n')
+    // when env is testing, don't need open it
+    if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
+        opn(uri)
+    }
+    _resolve()
 })
 
 var server = app.listen(port)
 
 module.exports = {
-  ready: readyPromise,
-  close: () => {
-    server.close()
-  }
+    ready: readyPromise,
+    close: () => {
+        server.close()
+    }
 }

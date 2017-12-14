@@ -11,10 +11,10 @@ Vue.use(Vuex);
 const debug = process.env.NODE_ENV !== 'production';
 
 export default new Vuex.Store({
-  actions,
-  getters,
-  state,
-  mutations,
-  strict: debug, // 开启严格模式 只在开发环境下使用
-  plugins: debug ? [createLogger()] : []
+    actions,
+    getters,
+    state,
+    mutations,
+    strict: debug, // 开启严格模式 只在开发环境下使用
+    plugins: debug ? [createLogger()] : []
 });
