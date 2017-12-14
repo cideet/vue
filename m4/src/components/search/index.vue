@@ -17,11 +17,13 @@
                     <div class="search-history" v-show="searchHistory.length">
                         <h1 class="title">
                             <span class="text">搜索历史</span>
-              <span class="clear" @click="showConfirm">
-              <i class="icon-clear"></i>
-            </span>
+                            <span class="clear" @click="showConfirm">
+                                <i class="icon-clear"></i>
+                            </span>
                         </h1>
-                        <v-search-list @select="setQuery" @delete="deleteSearchHistory" :searches="searchHistory"></v-search-list>
+                        <v-search-list @select="setQuery"
+                                       @delete="deleteSearchHistory"
+                                       :searches="searchHistory"></v-search-list>
                     </div>
                 </div>
             </v-scroll>

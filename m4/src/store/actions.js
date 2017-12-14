@@ -105,7 +105,7 @@ export function clearSearchHistory({commit}) {
 }
 
 export function deleteSong({commit, state}, song) {
-    let playlist = state.playlist.slice();
+    let playlist = state.playList.slice();
     let sequenceList = state.sequenceList.slice();
     let currentIndex = state.currentIndex;
     let pIndex = getIndex(playlist, song);
@@ -117,7 +117,7 @@ export function deleteSong({commit, state}, song) {
         currentIndex--;
     }
 
-    commit(types.SET_PLAYLIST, playlist);
+    commit(types.SET_PLAY_LIST, playlist);
     commit(types.SET_SEQUENCE_LIST, sequenceList);
     commit(types.SET_CURRENT_INDEX, currentIndex);
 
@@ -127,7 +127,7 @@ export function deleteSong({commit, state}, song) {
 }
 
 export const deleteSongList = function ({commit}) {
-    commit(types.SET_PLAYLIST, []);
+    commit(types.SET_PLAY_LIST, []);
     commit(types.SET_SEQUENCE_LIST, []);
     commit(types.SET_CURRENT_INDEX, -1);
     commit(types.SET_PLAYING_STATE, false);
