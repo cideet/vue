@@ -1,31 +1,24 @@
-/**
- * Created by sf on 2017/11/23.
- */
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import 'babel-polyfill';
-import fastclick from 'fastclick';
 import Vue from 'vue';
-import router from './router/index.js';
-import VueLazyload from 'vue-lazyload';
-import store from './store/index.js';
+import App from './App';
+import router from './router';
+import fastclick from 'fastclick';
+import VueLazyLoad from 'vue-lazyload';
+import store from './store/index';
 
-import App from './App.vue';
+import 'common/less/index.less';
 
-import '../src/common/less/index.less';
-
-fastclick.attach(document.body);
-
-// 图片懒加载
-Vue.use(VueLazyload, {
-    loading: require('common/images/default.jpg')
+fastclick.attach(document.body); // 没有300ms的延时
+Vue.use(VueLazyLoad, {
+  loading: require('common/image/default.png')
 });
 
+/* eslint-disable no-new */
 new Vue({
-    el: '#app',
-    router: router,
-    store: store,
-    render: (function (h) {
-        return h(App)
-    })
-    // render:h=>h(App)
-
+  el: '#app',
+  router,
+  store,
+  render: h => h(App)
 });
