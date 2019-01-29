@@ -1,15 +1,15 @@
-@vue/cli <br>
+##### @vue/cli <br>
 npm uninstall vue-cli -g <br>
 如果你已经全局安装了旧版本的 vue-cli (1.x 或 2.x)，你需要先卸载它。 <br>
 npm install -g @vue/cli <br>
 You are using Node v7.2.0, but this version of vue-cli requires Node >=8.9. <br>
 npm install -g @vue/cli-service-global <br>
 vue -V <br>
+vue.config.js https://github.com/vuejs/vue-cli/tree/dev/docs/config <br>
 
 
 
-
-# vue
+##### vue 2
 
 vue init webpack vue-music <br>
 npm install <br>
