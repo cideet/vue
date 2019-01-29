@@ -30,11 +30,33 @@
 </template>
 
 <script>
+    import {mapGetters, mapMutations} from 'vuex';
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
-  }
+  },
+    computed: {
+        ...mapGetters(['username', 'userimg', 'token'])
+    },
+    created(){
+        console.log('username->' + this.username);
+        console.log('userimg->' + this.userimg);
+        console.log('token->' + this.token);
+        this.setToken('34f34efsdf');
+        this.setUsername('张三丰');
+        this.setUserimg('png.png');
+        console.log('username->' + this.username);
+        console.log('userimg->' + this.userimg);
+        console.log('token->' + this.token);
+    },
+    methods: {
+        ...mapMutations({
+            setToken: 'SET_TOKEN',
+            setUsername: 'SET_USERNAME',
+            setUserimg: 'SET_USERIMG'
+        })
+    }
 }
 </script>
 
