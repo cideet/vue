@@ -4,6 +4,8 @@ npm uninstall vue-cli -g <br>
 npm install -g @vue/cli <br>
 You are using Node v7.2.0, but this version of vue-cli requires Node >=8.9. <br>
 npm install -g @vue/cli-service-global <br>
+vue -V <br>
+cube-ui是个什么鬼？ yes Partly yes no no<br>
 
 
 
